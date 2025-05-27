@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterapi/view/pages/firebase_options.dart';
+import 'package:flutterapi/firebase_options.dart';
 import 'package:flutterapi/view/pages/intro/intro_page.dart';
 
 var kDarkColorScheme = ColorScheme.fromSeed(
