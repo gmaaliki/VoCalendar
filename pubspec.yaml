@@ -1,14 +1,18 @@
 name: flutterapi
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
   sdk: ^3.7.0
 
 dependencies:
+  firebase_auth: ^5.5.4
+  firebase_core: ^3.13.1
   flutter:
     sdk: flutter
+  lottie: ^3.3.1
+  smooth_page_indicator: ^1.2.1
   speech_to_text: ^7.0.0
 
 dev_dependencies:
@@ -18,3 +22,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/lotties/
