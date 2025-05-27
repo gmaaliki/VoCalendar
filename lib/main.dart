@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterapi/view/home_page.dart';
+import 'package:flutterapi/view/speech_to_text.dart';
 
 void main() {
   runApp(const MainApp());
@@ -12,7 +13,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      home: SpeechToTextApp(),
     );
   }
 }
