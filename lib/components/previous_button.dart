@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class PreviousButton extends StatelessWidget {
   final PageController controller;
@@ -18,11 +19,11 @@ class PreviousButton extends StatelessWidget {
           curve: Curves.easeIn,
         );
       },
-      child: const Text(
+      child: Text(
         'Back',
         style: TextStyle(
           color: Color.fromARGB(255, 255, 255, 255),
-          fontSize: 16,
+          fontSize: 16.sp,
           fontWeight: FontWeight.w600,
         ),
       ),

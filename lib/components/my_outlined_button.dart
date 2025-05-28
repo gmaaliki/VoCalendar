@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MyOutlinedButton extends StatelessWidget {
   final String text;
@@ -18,17 +19,19 @@ class MyOutlinedButton extends StatelessWidget {
       style: OutlinedButton.styleFrom(
         side: BorderSide(color: textColor),
         foregroundColor: textColor,
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+        padding: EdgeInsets.symmetric(vertical: 12.h),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(25.r),
+        ),
       ),
       onPressed: onPressed,
       child: Center(
         child: Text(
           text,
-          style: const TextStyle(
-            fontSize: 14,
+          style: TextStyle(
+            fontSize: 14.sp,
             fontWeight: FontWeight.w600,
-            letterSpacing: 3,
+            letterSpacing: 3.w,
           ),
         ),
       ),

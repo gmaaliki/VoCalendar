@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterapi/components/lonceng_card.dart';
 import 'package:flutterapi/components/my_elevated_button.dart';
 import 'package:flutterapi/components/my_outlined_button.dart';
-import 'package:flutterapi/view/pages/login/login_page.dart';
-import 'package:flutterapi/view/pages/register/register_page.dart';
+import 'package:flutterapi/view/pages/auth/login_page.dart';
+import 'package:flutterapi/view/pages/auth/register_page.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
@@ -11,122 +12,103 @@ class WelcomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Gradient Background
       body: Container(
-        decoration: const BoxDecoration(
-          // gradient: LinearGradient(
-          //   begin: Alignment.topLeft,
-          //   end: Alignment.bottomRight,
-          //   colors: [Color(0xFF3F24E6), Color(0xFFBDF152)],
-          // ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.only(top: 20),
-          child: Column(
-            children: [
-              // Section card
-              const LoncengCard(),
-              const SizedBox(height: 40),
-
-              // Welcome Text
-              const Text(
-                'WELCOME TO',
-                style: TextStyle(
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  letterSpacing: 5,
-                ),
-              ),
-
-              // Vocalendar
-              const Text(
-                'VOCALENDAR',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 2,
-                  color: Color(0xFFBDF152),
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // calendar icon
-              const Icon(
-                Icons.calendar_month_rounded,
-                size: 100,
-                color: Color(0xFFBDF152),
-              ),
-              const SizedBox(height: 16),
-
-              // Description
-              const Text(
-                'Voice-powered calendar assistant',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-              ),
-
-              // Subtitle Text
-              Expanded(
-                child: const Text(
-                  'Plan your life by just speaking',
-                  style: TextStyle(fontSize: 16, color: Colors.grey),
-                ),
-              ),
-
-              // Buttons
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                child: Column(
-                  children: [
-                    // Register Button
-                    Row(
-                      children: [
-                        Expanded(
-                          child: MyOutlinedButton(
-                            text: 'REGISTER',
-                            textColor: Color(0xFFBDF152),
-                            onPressed: () {
-                              debugPrint('Register button pressed');
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const RegisterPage(),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ],
+        width: 1.sw,
+        height: 1.sh,
+        color: Colors.black,
+        child: Column(
+          children: [
+            SizedBox(height: 0.02.sh),
+            const LoncengCard(),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'WELCOME TO',
+                    style: TextStyle(
+                      fontSize: 30.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      letterSpacing: 5.w,
                     ),
-                    const SizedBox(height: 12),
-
-                    // Login Button
-                    Row(
-                      children: [
-                        Expanded(
-                          child: MyElevatedButton(
-                            text: 'LOGIN',
-                            textColor: Colors.white,
-                            backgroundColor: const Color(0xFF3F24E6),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const LoginPage(),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ],
+                  ),
+                  Text(
+                    'VOCALENDAR',
+                    style: TextStyle(
+                      fontSize: 24.sp,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 2.w,
+                      color: Color(0xFFBDF152),
                     ),
-                    const SizedBox(height: 14),
-                  ],
-                ),
+                  ),
+                  SizedBox(height: 8.h),
+                  Icon(
+                    Icons.calendar_month_rounded,
+                    size: 80.r,
+                    color: Color(0xFFBDF152),
+                  ),
+                  SizedBox(height: 16.h),
+                  Text(
+                    'Voice-powered calendar assistant',
+                    style: TextStyle(fontSize: 16.sp, color: Colors.grey),
+                  ),
+                  Text(
+                    'Plan your life by just speaking',
+                    style: TextStyle(fontSize: 16.sp, color: Colors.grey),
+                  ),
+                ],
               ),
-              const SizedBox(height: 50),
-            ],
-          ),
+            ),
+
+            // Buttons section
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 30.0.w),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: MyOutlinedButton(
+                          text: 'REGISTER',
+                          textColor: Color(0xFFBDF152),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const RegisterPage(),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10.h),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: MyElevatedButton(
+                          text: 'LOGIN',
+                          textColor: Colors.white,
+                          backgroundColor: const Color(0xFF3F24E6),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const LoginPage(),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20.h),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

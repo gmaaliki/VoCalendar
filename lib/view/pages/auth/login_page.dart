@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterapi/components/lonceng_card.dart';
 import 'package:flutterapi/components/my_elevated_button.dart';
 import 'package:flutterapi/components/square_tile.dart';
-import 'package:flutterapi/helper/display_message.dart';
+import 'package:flutterapi/helper/top_snackbar.dart';
 import 'package:flutterapi/services/auth/auth_service.dart';
-import 'package:flutterapi/view/pages/home_page.dart';
-import 'package:flutterapi/view/pages/register/register_page.dart';
+import 'package:flutterapi/view/pages/auth/forgot_password_page.dart';
+import 'package:flutterapi/view/pages/auth/register_page.dart';
+import 'package:flutterapi/view/pages/speech_to_text.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -32,24 +35,26 @@ class _LoginPageState extends State<LoginPage> {
       body: Stack(
         children: [
           Container(
-            padding: const EdgeInsets.only(top: 20),
-            width: double.infinity,
+            width: 1.sw,
+            height: 1.sh,
+            color: Colors.black,
             child: Column(
-              children: const [
+              children: [
+                SizedBox(height: 0.02.sh),
                 LoncengCard(),
-                SizedBox(height: 20),
+                SizedBox(height: 10.h),
                 Text(
                   'WELCOME BACK',
                   style: TextStyle(
-                    fontSize: 26,
+                    fontSize: 26.sp,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
-                    letterSpacing: 2,
+                    letterSpacing: 2.w,
                   ),
                 ),
                 Text(
                   'Login to your account!',
-                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                  style: TextStyle(fontSize: 16.sp, color: Colors.grey),
                 ),
               ],
             ),
@@ -57,56 +62,56 @@ class _LoginPageState extends State<LoginPage> {
 
           // Scrollable login form
           DraggableScrollableSheet(
-            initialChildSize: 0.5,
-            minChildSize: 0.5,
+            initialChildSize: 0.4,
+            minChildSize: 0.4,
             maxChildSize: 0.9,
             builder: (context, scrollController) {
               return Container(
-                padding: const EdgeInsets.symmetric(horizontal: 40),
+                padding: EdgeInsets.symmetric(horizontal: 40.w),
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.surface,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(32),
-                    topRight: Radius.circular(32),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(32.r),
+                    topRight: Radius.circular(32.r),
                   ),
                 ),
                 child: SingleChildScrollView(
                   controller: scrollController,
                   child: Column(
                     children: [
-                      const SizedBox(height: 20),
+                      SizedBox(height: 20.h),
                       Container(
-                        width: 40,
-                        height: 4,
+                        width: 40.w,
+                        height: 4.h,
                         decoration: BoxDecoration(
                           color: Colors.grey,
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(10.r),
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: 20.h),
 
                       // Email Field
                       TextField(
                         controller: emailController,
                         decoration: InputDecoration(
-                          prefixIcon: const Icon(Icons.email),
+                          prefixIcon: Icon(Icons.email, size: 24.r),
                           labelText: 'Email',
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(12.r),
                           ),
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16.h),
 
                       // Password Field
                       TextField(
                         controller: passwordController,
                         obscureText: !isPasswordVisible,
                         decoration: InputDecoration(
-                          prefixIcon: const Icon(Icons.lock),
+                          prefixIcon: Icon(Icons.lock, size: 24.r),
                           labelText: 'Password',
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(12.r),
                           ),
                           suffixIcon: IconButton(
                             onPressed: () {
@@ -118,11 +123,12 @@ class _LoginPageState extends State<LoginPage> {
                               isPasswordVisible
                                   ? Icons.visibility
                                   : Icons.visibility_off,
+                              size: 24.r,
                             ),
                           ),
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10.h),
 
                       // Forgot password
                       Row(
@@ -130,11 +136,18 @@ class _LoginPageState extends State<LoginPage> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              // Navigate to Forgot Password Page
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (context) => const ForgotPasswordPage(),
+                                ),
+                              );
                             },
                             child: Text(
                               'Forgot Password?',
                               style: TextStyle(
+                                fontSize: 12.sp,
                                 color: Color(0xFFBDF152),
                                 fontWeight: FontWeight.bold,
                               ),
@@ -142,7 +155,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: 20.h),
 
                       // Login Button
                       MyElevatedButton(
@@ -151,32 +164,32 @@ class _LoginPageState extends State<LoginPage> {
                         backgroundColor: const Color(0xFFBDF152),
                         onPressed: onLoginPressed,
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: 20.h),
 
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Expanded(
                             child: Divider(
-                              thickness: 0.5,
+                              thickness: 0.5.h,
                               color: Colors.grey[400],
                             ),
                           ),
-                          const SizedBox(width: 10),
+                          SizedBox(width: 10.w),
                           const Text(
                             'Or continue with',
                             style: TextStyle(color: Colors.grey),
                           ),
-                          const SizedBox(width: 10),
+                          SizedBox(width: 10.w),
                           Expanded(
                             child: Divider(
-                              thickness: 0.5,
+                              thickness: 0.5.h,
                               color: Colors.grey[400],
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: 20.h),
 
                       // Social Login
                       Row(
@@ -188,7 +201,7 @@ class _LoginPageState extends State<LoginPage> {
                               // Google Login
                             },
                           ),
-                          const SizedBox(width: 20),
+                          SizedBox(width: 20.w),
                           SquareTile(
                             imagePath: 'assets/images/apple.png',
                             onTap: () {
@@ -197,13 +210,16 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: 20.h),
 
                       // Don't have account
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text("Don't have an account?"),
+                          Text(
+                            "Don't have an account?",
+                            style: TextStyle(fontSize: 12.sp),
+                          ),
                           GestureDetector(
                             onTap: () {
                               Navigator.pushReplacement(
@@ -213,9 +229,10 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                               );
                             },
-                            child: const Text(
+                            child: Text(
                               ' Register here',
                               style: TextStyle(
+                                fontSize: 12.sp,
                                 color: Color(0xFFBDF152),
                                 fontWeight: FontWeight.bold,
                               ),
@@ -223,7 +240,8 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 20),
+
+                      SizedBox(height: 20.h),
                     ],
                   ),
                 ),
@@ -239,7 +257,24 @@ class _LoginPageState extends State<LoginPage> {
     final authService = AuthService();
 
     if (emailController.text.isEmpty || passwordController.text.isEmpty) {
-      displayMessage('Email and password cannot be empty', context);
+      showTopSnackbar(
+        context: context,
+        title: 'Alert',
+        message: 'Email and password cannot be empty',
+        contentType: ContentType.warning,
+        shadowColor: Colors.orange.shade300,
+      );
+      return;
+    }
+
+    if (!emailController.text.contains('@gmail.com')) {
+      showTopSnackbar(
+        context: context,
+        title: 'Alert',
+        message: 'Please enter a valid gmail address',
+        contentType: ContentType.warning,
+        shadowColor: Colors.orange.shade300,
+      );
       return;
     }
 
@@ -248,12 +283,26 @@ class _LoginPageState extends State<LoginPage> {
         emailController.text,
         passwordController.text,
       );
+      showTopSnackbar(
+        context: context,
+        title: 'Login Success',
+        message:
+            'Welcome to VoCalendar, ${emailController.text.split('@')[0]}!',
+        contentType: ContentType.success,
+        shadowColor: Colors.green.shade300,
+      );
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
+        MaterialPageRoute(builder: (context) => SpeechHomePage()),
       );
     } catch (e) {
-      displayMessage(e.toString(), context);
+      showTopSnackbar(
+        context: context,
+        title: 'Login Failed',
+        message: 'Email or password is incorrect',
+        contentType: ContentType.failure,
+        shadowColor: Colors.red.shade300,
+      );
     }
   }
 }

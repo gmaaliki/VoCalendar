@@ -1,16 +1,20 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterapi/view/pages/intro/intro_page.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class SpeechToTextApp extends StatelessWidget {
+  const SpeechToTextApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: SpeechHomePage(),
-    );
+    return MaterialApp(home: SpeechHomePage());
   }
 }
 
 class SpeechHomePage extends StatefulWidget {
+  const SpeechHomePage({super.key});
+
   @override
   _SpeechHomePageState createState() => _SpeechHomePageState();
 }
@@ -37,7 +41,7 @@ class _SpeechHomePageState extends State<SpeechHomePage> {
               _text = result.recognizedWords;
             });
           },
-          localeId: 'id-ID'
+          localeId: 'id-ID',
         );
       }
     } else {
@@ -49,7 +53,23 @@ class _SpeechHomePageState extends State<SpeechHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Speech to Text')),
+      appBar: AppBar(
+        title: Text('Speech to Text'),
+        automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () {
+              FirebaseAuth.instance.signOut().then((_) {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const IntroPage()),
+                );
+              });
+            },
+          ),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -58,7 +78,7 @@ class _SpeechHomePageState extends State<SpeechHomePage> {
             SizedBox(height: 20),
             FloatingActionButton(
               onPressed: _listen,
-              child: Icon(_isListening ? Icons.mic_off : Icons.mic),
+              child: Icon(_isListening ? Icons.mic : Icons.mic_off),
             ),
           ],
         ),

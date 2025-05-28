@@ -1,9 +1,12 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterapi/components/lonceng_card.dart';
 import 'package:flutterapi/components/my_elevated_button.dart';
 import 'package:flutterapi/helper/display_message.dart';
+import 'package:flutterapi/helper/top_snackbar.dart';
 import 'package:flutterapi/services/auth/auth_service.dart';
-import 'package:flutterapi/view/pages/login/login_page.dart';
+import 'package:flutterapi/view/pages/auth/login_page.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -22,6 +25,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   void dispose() {
+    nameController.dispose();
     emailController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
@@ -33,73 +37,67 @@ class _RegisterPageState extends State<RegisterPage> {
     super.initState();
   }
 
-  // decoration: const BoxDecoration(
-  //   // gradient: LinearGradient(
-  //   //   begin: Alignment.topLeft,
-  //   //   end: Alignment.bottomRight,
-  //   //   colors: [Color(0xFF3F24E6), Color(0xFFBDF152)],
-  //   // ),
-  // ),
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-          // Background gradient atau lonceng bisa diletakkan di atas
           Container(
-            padding: const EdgeInsets.only(top: 20),
-            width: double.infinity,
+            width: 1.sw,
+            height: 1.sh,
+            color: Colors.black,
             child: Column(
-              children: const [
+              children: [
+                SizedBox(height: 0.02.sh),
                 LoncengCard(),
-                SizedBox(height: 20),
+                SizedBox(height: 10.h),
                 Text(
                   'CREATE AN ACCOUNT',
                   style: TextStyle(
-                    fontSize: 26,
+                    fontSize: 24.sp,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
-                    letterSpacing: 2,
+                    letterSpacing: 2.w,
                   ),
                 ),
                 Text(
                   'Join us to get started',
-                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                  style: TextStyle(fontSize: 16.sp, color: Colors.grey),
                 ),
               ],
             ),
           ),
 
-          // Draggable Scrollable
           DraggableScrollableSheet(
-            initialChildSize: 0.5,
-            minChildSize: 0.5,
+            initialChildSize: 0.4,
+            minChildSize: 0.4,
             maxChildSize: 0.9,
             builder: (context, scrollController) {
               return Container(
-                padding: const EdgeInsets.symmetric(horizontal: 40),
+                padding: EdgeInsets.symmetric(horizontal: 40.w),
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.surface,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(32),
-                    topRight: Radius.circular(32),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(32.r),
+                    topRight: Radius.circular(32.r),
                   ),
                 ),
                 child: SingleChildScrollView(
                   controller: scrollController,
                   child: Column(
                     children: [
-                      const SizedBox(height: 20),
+                      SizedBox(height: 20.h),
 
                       Container(
-                        width: 40,
-                        height: 4,
+                        width: 40.w,
+                        height: 4.h,
                         decoration: BoxDecoration(
                           color: Colors.grey,
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(10.r),
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: 20.h),
 
                       // Full Name Field
                       TextField(
@@ -108,34 +106,34 @@ class _RegisterPageState extends State<RegisterPage> {
                           prefixIcon: const Icon(Icons.person),
                           labelText: 'Full Name',
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
+                            borderRadius: BorderRadius.circular(15.r),
                           ),
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16.h),
 
                       // Email Field
                       TextField(
                         controller: emailController,
                         decoration: InputDecoration(
-                          prefixIcon: const Icon(Icons.email),
+                          prefixIcon: Icon(Icons.email, size: 24.r),
                           labelText: 'Email',
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(12.r),
                           ),
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16.h),
 
                       // Password field
                       TextField(
                         controller: passwordController,
                         obscureText: !isPasswordVisible,
                         decoration: InputDecoration(
-                          prefixIcon: const Icon(Icons.lock),
+                          prefixIcon: Icon(Icons.lock, size: 24.r),
                           labelText: 'Password',
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(12.r),
                           ),
                           suffixIcon: IconButton(
                             onPressed: () {
@@ -147,21 +145,22 @@ class _RegisterPageState extends State<RegisterPage> {
                               isPasswordVisible
                                   ? Icons.visibility
                                   : Icons.visibility_off,
+                              size: 24.r,
                             ),
                           ),
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16.h),
 
                       // Confirm Password Field
                       TextField(
                         controller: confirmPasswordController,
                         obscureText: !isConfirmPasswordVisible,
                         decoration: InputDecoration(
-                          prefixIcon: const Icon(Icons.lock),
+                          prefixIcon: Icon(Icons.lock, size: 24.r),
                           labelText: 'Confirm Password',
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(12.r),
                           ),
                           suffixIcon: IconButton(
                             onPressed: () {
@@ -174,15 +173,20 @@ class _RegisterPageState extends State<RegisterPage> {
                               isConfirmPasswordVisible
                                   ? Icons.visibility
                                   : Icons.visibility_off,
+                              size: 24.r,
                             ),
                           ),
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10.h),
 
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text('Already have an account?'),
+                          Text(
+                            'Already have an account?',
+                            style: TextStyle(fontSize: 12.sp),
+                          ),
                           GestureDetector(
                             onTap: () {
                               Navigator.pushReplacement(
@@ -192,9 +196,10 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                               );
                             },
-                            child: const Text(
+                            child: Text(
                               ' Login here',
                               style: TextStyle(
+                                fontSize: 12.sp,
                                 color: Color(0xFFBDF152),
                                 fontWeight: FontWeight.bold,
                               ),
@@ -202,7 +207,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: 20.h),
 
                       MyElevatedButton(
                         text: 'REGISTER',
@@ -230,13 +235,36 @@ class _RegisterPageState extends State<RegisterPage> {
         emailController.text.isEmpty ||
         passwordController.text.isEmpty ||
         confirmPasswordController.text.isEmpty) {
-      displayMessage('Please fill all fields', context);
+      showTopSnackbar(
+        context: context,
+        title: 'Alert',
+        message: 'Please fill all fields',
+        contentType: ContentType.warning,
+        shadowColor: Colors.orange.shade300,
+      );
+      return;
+    }
+
+    if (!emailController.text.contains('@gmail.com')) {
+      showTopSnackbar(
+        context: context,
+        title: 'Alert',
+        message: 'Please enter a valid email address',
+        contentType: ContentType.warning,
+        shadowColor: Colors.orange.shade300,
+      );
       return;
     }
 
     // pass and confirm pass not match
     if (passwordController.text != confirmPasswordController.text) {
-      displayMessage('Password and Confirm Password not match', context);
+      showTopSnackbar(
+        context: context,
+        title: 'Alert',
+        message: 'Password and Confirm Password do not match',
+        contentType: ContentType.warning,
+        shadowColor: Colors.orange.shade300,
+      );
       return;
     }
 
@@ -247,6 +275,13 @@ class _RegisterPageState extends State<RegisterPage> {
           nameController.text,
           emailController.text,
           passwordController.text,
+        );
+        showTopSnackbar(
+          context: context,
+          title: 'Registration Successful',
+          message: 'Please login to continue',
+          contentType: ContentType.success,
+          shadowColor: Colors.green.shade300,
         );
 
         Navigator.push(

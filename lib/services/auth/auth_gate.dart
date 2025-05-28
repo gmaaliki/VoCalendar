@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterapi/view/pages/home_page.dart';
 import 'package:flutterapi/view/pages/intro/intro_page.dart';
+import 'package:flutterapi/view/pages/speech_to_text.dart';
 
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
@@ -14,7 +14,7 @@ class AuthGate extends StatelessWidget {
         builder: (context, snapshot) {
           // user is logged in
           if (snapshot.hasData) {
-            return const HomePage();
+            return const SpeechHomePage();
           }
           // user is not logged in
           else {
