@@ -1,8 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterapi/firebase_options.dart';
+import 'package:flutterapi/services/auth/auth_gate.dart';
 import 'package:flutterapi/services/notifications/notification_service.dart';
-import 'package:flutterapi/view/pages/intro/intro_page.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 var kDarkColorScheme = ColorScheme.fromSeed(
@@ -42,7 +42,7 @@ class MainApp extends StatelessWidget {
             foregroundColor: kDarkColorScheme.onSurface,
           ),
         ),
-        home: IntroPage(),
+        home: AuthGate(),
       );
     },
   );
