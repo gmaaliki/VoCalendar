@@ -1,13 +1,13 @@
-class PostRequestDto {
-  final String title;
-  final String body;
+class QueryToScheduleRequestDto {
+  final int user_id;
+  final String query;
 
-  PostRequestDto({required this.title, required this.body});
+  QueryToScheduleRequestDto({required this.user_id, required this.query});
 
   Map<String, dynamic> toJson() {
     return {
-      'title': title,
-      'content': body, // Note: API expects "content" instead of "body"
+      'user_id': user_id,
+      'query': query,
     };
   }
 }
