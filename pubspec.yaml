@@ -14,11 +14,11 @@ dependencies:
   firebase_core: ^3.13.1
   flutter:
     sdk: flutter
+  flutter_dotenv: ^5.1.0
   flutter_screenutil: ^5.9.3
   lottie: ^3.3.1
   smooth_page_indicator: ^1.2.1
   speech_to_text: ^7.0.0
-  flutter_dotenv: ^5.1.0
 
 dev_dependencies:
   flutter_test:
@@ -30,3 +30,4 @@ flutter:
   assets:
     - assets/images/
     - assets/lotties/
+    - .env
