@@ -4,6 +4,7 @@ import 'package:flutterapi/firebase_options.dart';
 import 'package:flutterapi/services/auth/auth_gate.dart';
 import 'package:flutterapi/services/notifications/notification_service.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 var kDarkColorScheme = ColorScheme.fromSeed(
   seedColor: const Color.fromARGB(255, 100, 1, 249),
@@ -12,6 +13,7 @@ var kDarkColorScheme = ColorScheme.fromSeed(
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await NotificationService.initializeNotification();
 
