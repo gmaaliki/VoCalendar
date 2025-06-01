@@ -28,37 +28,39 @@ class _SpeechHomePageState extends State<SpeechHomePage> {
     _speech = stt.SpeechToText();
   }
 
-  void _listen() async {
-    if (!_isListening) {
-      bool available = await _speech.initialize();
-      if (available) {
-        setState(() => _isListening = true);
-        _speech.listen(
-          onResult: (result) {
-            setState(() {
-              _text = result.recognizedWords;
-            });
-          },
-          localeId: 'id-ID',
-        );
-      }
-    } else {
-      if (_text != '') {
-        String? results = await vm.generateScheduleFromQuery(_text);
-        print('ini hasil $results');
-        if (results == null || results.isEmpty) {
+  void _onHoldMic() async {
+    print("menahan mic");
+    setState(() => _isListening = true);
+    bool available = await _speech.initialize();
+    if (available) {
+      _speech.listen(
+        onResult: (result) {
           setState(() {
-            _response = 'error';
+            _text = result.recognizedWords;
           });
-        } else {
-          setState(() {
-            _response = results;
-          });
-        }
-      }
-      setState(() => _isListening = false);
-      _speech.stop();
+        },
+        localeId: 'id-ID',
+      );
     }
+  }
+
+  void _onReleaseMic() async {
+    print("melepas mic");
+    setState(() => _isListening = false);
+    if (_text != '') {
+      String? results = await vm.generateScheduleFromQuery(_text);
+
+      if (results == null || results.isEmpty) {
+        setState(() {
+          _response = 'error';
+        });
+      } else {
+        setState(() {
+          _response = results;
+        });
+      }
+    }
+    _speech.stop();
   }
 
   @override
@@ -93,11 +95,23 @@ class _SpeechHomePageState extends State<SpeechHomePage> {
                     ]
                 )
             ),
-            SizedBox(height: 20),
-            FloatingActionButton(
-              onPressed: _listen,
-              child: Icon(_isListening ? Icons.mic : Icons.mic_off),
-            ),
+            GestureDetector(
+              onTapDown: (_) => _onHoldMic(),
+              onTapUp: (_) => _onReleaseMic(),
+              onTapCancel: _onReleaseMic,
+              child: SizedBox(
+                width: 80,
+                height: 80,
+                child: FloatingActionButton(
+                  onPressed: null,
+                  child: Icon(
+                    _isListening ? Icons.mic : Icons.mic_off,
+                    size: 36,
+                  ),
+                  shape: CircleBorder(),
+                ),
+              ),
+            )
           ],
         ),
       ),
