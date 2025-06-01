@@ -33,9 +33,7 @@ class ScheduleViewModel extends ChangeNotifier {
       isLoading = false;
       notifyListeners();
     }
-    print(jsonResponse);
-    print(responseDto);
-    print(response);
+
     return response;
   }
 }
