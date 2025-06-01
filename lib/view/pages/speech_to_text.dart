@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterapi/view/pages/intro/intro_page.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:flutter_tts/flutter_tts.dart';
 
 import '../../api/chat_api.dart';
 import '../../viewmodels/schedule_viewmodel.dart';
@@ -15,6 +16,8 @@ class SpeechHomePage extends StatefulWidget {
 
 class _SpeechHomePageState extends State<SpeechHomePage> {
   late stt.SpeechToText _speech;
+  final FlutterTts _flutterTts = FlutterTts();
+
   bool _isListening = false;
   String _text = 'Press the mic button and start speaking...';
   String _response = 'Response will be shown here';
@@ -58,6 +61,8 @@ class _SpeechHomePageState extends State<SpeechHomePage> {
         setState(() {
           _response = results;
         });
+        await _flutterTts.setLanguage("id-ID");
+        await _flutterTts.speak(_response);
       }
     }
     _speech.stop();
