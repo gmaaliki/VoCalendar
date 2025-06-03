@@ -25,7 +25,7 @@ class LoncengCard extends StatelessWidget {
         ),
         child: Center(
           child: Lottie.asset(
-            'assets/lotties/lonceng2.json',
+            'assets/lotties/lonceng.json',
             width: 300.h,
             height: 300.h,
           ),
