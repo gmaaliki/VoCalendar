@@ -6,8 +6,8 @@ import 'package:flutterapi/helper/top_snackbar.dart';
 import 'package:flutterapi/services/auth/auth_service.dart';
 import 'package:flutterapi/view/pages/auth/forgot_password_page.dart';
 import 'package:flutterapi/view/pages/auth/register_page.dart';
-import 'package:flutterapi/view/pages/speech_to_text.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:flutterapi/view/widgets/navigation_menu.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -324,7 +324,7 @@ class _LoginPageState extends State<LoginPage> {
       );
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => SpeechHomePage()),
+        MaterialPageRoute(builder: (context) => NavigationMenu()),
       );
     } catch (e) {
       showTopSnackbar(
