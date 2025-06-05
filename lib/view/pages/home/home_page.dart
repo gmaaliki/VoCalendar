@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutterapi/providers/user_provider.dart';
+import 'package:provider/provider.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
   Widget build(BuildContext context) {
+    final userData = Provider.of<UserProvider>(context).userData;
     return SafeArea(
       child: Scaffold(
         body: Padding(
@@ -28,7 +36,7 @@ class HomePage extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        'Michael Abi',
+                        userData['name'] ?? 'No Name',
                         style: TextStyle(
                           fontSize: 26.sp,
                           fontWeight: FontWeight.bold,

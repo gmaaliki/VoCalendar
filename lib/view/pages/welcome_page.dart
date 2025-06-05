@@ -20,12 +20,12 @@ class WelcomePage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Top spacing
-              SizedBox(height: 60.h),
+              SizedBox(height: 40.h),
 
               // Lottie animation (your existing component)
-              const LoncengCard(),
+              Flexible(flex: 3, child: const LoncengCard()),
 
-              SizedBox(height: 40.h),
+              SizedBox(height: 20.h),
 
               // App name - simplified
               Text(
@@ -34,7 +34,7 @@ class WelcomePage extends StatelessWidget {
                   fontSize: 32.sp,
                   fontWeight: FontWeight.bold,
                   color: const Color(0xFFBDF152),
-                  letterSpacing: 5.w,
+                  letterSpacing: 4.w,
                 ),
               ),
 
@@ -51,10 +51,9 @@ class WelcomePage extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
 
-              // Spacer to push buttons to bottom
               const Spacer(),
 
-              // Buttons section - cleaner layout
+              // Buttons section
               Column(
                 children: [
                   MyElevatedButton(
@@ -88,7 +87,7 @@ class WelcomePage extends StatelessWidget {
                 ],
               ),
 
-              SizedBox(height: 40.h),
+              SizedBox(height: 30.h),
             ],
           ),
         ),

@@ -5,6 +5,7 @@ import 'package:flutterapi/components/my_elevated_button.dart';
 import 'package:flutterapi/helper/display_message.dart';
 import 'package:flutterapi/helper/top_snackbar.dart';
 import 'package:flutterapi/services/auth/auth_service.dart';
+import 'package:flutterapi/services/database/firestore.dart';
 import 'package:flutterapi/view/pages/auth/login_page.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -276,7 +277,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   void onRegisterPressed() async {
     final authService = AuthService();
-
+    FirestoreService db = FirestoreService();
     // empty all text field
     if (nameController.text.isEmpty ||
         emailController.text.isEmpty ||
@@ -318,11 +319,33 @@ class _RegisterPageState extends State<RegisterPage> {
     // pass and confirm pass match
     if (passwordController.text == confirmPasswordController.text) {
       try {
+        // Sign up with email and password
         await authService.signUpWithEmailPassword(
           nameController.text,
           emailController.text,
           passwordController.text,
         );
+
+        await db.saveUserDataToDatabase(
+          nameController.text,
+          emailController.text,
+          passwordController.text,
+          null, // phone
+          null, // job
+          null, // photoUrl
+        );
+
+        // Get the user ID from the authentication result
+        // final userId = authService.getCurrentUser()?.uid;
+
+        // Save user data to Firestore
+        // await db.saveUserDataToDatabase(
+        //   uid: userId ?? '',
+        //   name: nameController.text,
+        //   email: emailController.text,
+        //   password: passwordController.text,
+        // );
+
         showTopSnackbar(
           context: context,
           title: 'Registration Successful',

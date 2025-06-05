@@ -26,54 +26,52 @@ class _NavigationMenuState extends State<NavigationMenu> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: _pages[_currentIndex],
-        bottomNavigationBar: Padding(
-          padding: EdgeInsets.only(bottom: 10.h),
-          child: CrystalNavigationBar(
-            currentIndex: _currentIndex,
-            enablePaddingAnimation: true,
-            indicatorColor: Colors.black,
-            unselectedItemColor: Colors.black.withOpacity(0.5),
-            backgroundColor: const Color(0xFFBDF152),
-            // outlineBorderColor: Colors.black.withOpacity(0.1),
-            // borderWidth: 2,
-            // outlineBorderColor: Colors.white,
-            onTap: _handleIndexChanged,
-            items: [
-              /// Home
-              CrystalNavigationBarItem(
-                icon: IconlyBold.home,
-                unselectedIcon: IconlyLight.home,
-                selectedColor: Colors.black,
-                badge: Badge(
-                  label: Text("9+", style: TextStyle(color: Colors.black)),
-                ),
+    return Scaffold(
+      body: _pages[_currentIndex],
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.only(bottom: 10.h),
+        child: CrystalNavigationBar(
+          currentIndex: _currentIndex,
+          enablePaddingAnimation: true,
+          indicatorColor: Colors.black,
+          unselectedItemColor: Colors.black.withOpacity(0.5),
+          backgroundColor: const Color(0xFFBDF152),
+          // outlineBorderColor: Colors.black.withOpacity(0.1),
+          // borderWidth: 2,
+          // outlineBorderColor: Colors.white,
+          onTap: _handleIndexChanged,
+          items: [
+            /// Home
+            CrystalNavigationBarItem(
+              icon: IconlyBold.home,
+              unselectedIcon: IconlyLight.home,
+              selectedColor: Colors.black,
+              badge: Badge(
+                label: Text("9+", style: TextStyle(color: Colors.black)),
               ),
+            ),
 
-              /// Favourite
-              CrystalNavigationBarItem(
-                icon: IconlyBold.voice,
-                unselectedIcon: IconlyLight.voice,
-                selectedColor: Colors.black,
-              ),
+            /// Favourite
+            CrystalNavigationBarItem(
+              icon: IconlyBold.voice,
+              unselectedIcon: IconlyLight.voice,
+              selectedColor: Colors.black,
+            ),
 
-              /// Add
-              CrystalNavigationBarItem(
-                icon: IconlyBold.plus,
-                unselectedIcon: IconlyLight.plus,
-                selectedColor: Colors.black,
-              ),
+            /// Add
+            CrystalNavigationBarItem(
+              icon: IconlyBold.plus,
+              unselectedIcon: IconlyLight.plus,
+              selectedColor: Colors.black,
+            ),
 
-              /// Profile
-              CrystalNavigationBarItem(
-                icon: IconlyBold.profile,
-                unselectedIcon: IconlyLight.profile,
-                selectedColor: Colors.black,
-              ),
-            ],
-          ),
+            /// Profile
+            CrystalNavigationBarItem(
+              icon: IconlyBold.profile,
+              unselectedIcon: IconlyLight.profile,
+              selectedColor: Colors.black,
+            ),
+          ],
         ),
       ),
     );
