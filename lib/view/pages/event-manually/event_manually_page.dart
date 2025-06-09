@@ -1,8 +1,266 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../../../models/tasks.model.dart';
+import '../../../services/database/tasks_service.dart';
 
-class EventManuallyPage extends StatelessWidget {
+class EventManuallyPage extends StatefulWidget {
   const EventManuallyPage({super.key});
+
+  @override
+  State<EventManuallyPage> createState() => _EventManuallyPageState();
+}
+
+class _EventManuallyPageState extends State<EventManuallyPage> {
+  Map<DateTime, List<Task>> _tasksByDate = {};
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
+
+  static final DateTime _calendarFirstDay = DateTime.utc(2000, 1, 1);
+  static final DateTime _calendarLastDay = DateTime.utc(2100, 12, 31);
+
+  @override
+  void initState() {
+    super.initState();
+    _focusedDay = DateTime.now();
+    _selectedDay = _focusedDay;
+    _fetchTasks();
+  }
+
+  void _fetchTasks() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+    TasksService().getTasksForUser(user.uid).listen(
+      (tasks) {
+        final map = <DateTime, List<Task>>{};
+        for (final task in tasks) {
+          try {
+            final ts = task.dueDate;
+            final date = ts.toDate();
+            final normalized = DateTime(date.year, date.month, date.day);
+            map.putIfAbsent(normalized, () => []).add(task);
+          } catch (e) {
+            debugPrint('Error parsing dueDate for task \\${task.id}: $e');
+          }
+        }
+        if (mounted) {
+          setState(() {
+            _tasksByDate = map;
+          });
+        }
+      },
+      onError: (error) {
+        debugPrint('Firestore stream error: $error');
+      },
+    );
+  }
+
+  List<Task> _getTasksForDay(DateTime day) {
+    final date = DateTime(day.year, day.month, day.day);
+    return _tasksByDate.entries
+        .where((entry) => entry.key.year == date.year && entry.key.month == date.month && entry.key.day == date.day)
+        .expand((entry) => entry.value)
+        .toList();
+  }
+
+  CalendarBuilders<Task> calendarBuilders = CalendarBuilders(
+    markerBuilder: (context, date, events) {
+      if (events.isNotEmpty) {
+        return Positioned(
+          bottom: 1,
+          child: Container(
+            width: 7,
+            height: 7,
+            decoration: const BoxDecoration(
+              color: Colors.red,
+              shape: BoxShape.circle,
+            ),
+          ),
+        );
+      }
+      return const SizedBox.shrink();
+    },
+  );
+
+  void _showCreateTaskModal(BuildContext context) {
+    final _titleController = TextEditingController();
+    final _descController = TextEditingController();
+    DateTime? _dueDate;
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            left: 20,
+            right: 20,
+            top: 20,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('Create Task', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 16),
+              TextField(
+                controller: _titleController,
+                decoration: const InputDecoration(labelText: 'Title'),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: _descController,
+                decoration: const InputDecoration(labelText: 'Description'),
+                maxLines: 2,
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Expanded(
+                    child: StatefulBuilder(
+                      builder: (context, setModalState) {
+                        return Text(_dueDate == null
+                            ? 'No due date selected'
+                            : 'Due: \\${_dueDate!.toLocal().toString().split(' ')[0]}');
+                      },
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      final picked = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: _calendarFirstDay,
+                        lastDate: _calendarLastDay,
+                      );
+                      if (picked != null) {
+                        setState(() {
+                          _dueDate = picked;
+                        });
+                        Navigator.of(context).pop();
+                        _showCreateTaskModal(context);
+                      }
+                    },
+                    child: const Text('Pick Due Date'),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () async {
+                  if (_titleController.text.isEmpty || _descController.text.isEmpty || _dueDate == null) return;
+                  final user = FirebaseAuth.instance.currentUser;
+                  if (user == null) return;
+                  final task = Task(
+                    id: '',
+                    title: _titleController.text,
+                    description: _descController.text,
+                    completed: false,
+                    createdAt: Timestamp.now(),
+                    dueDate: Timestamp.fromDate(_dueDate!),
+                    userId: user.uid,
+                  );
+                  await TasksService().addTask(task);
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Create'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showEditTaskModal(BuildContext context, Task task) {
+    final _titleController = TextEditingController(text: task.title);
+    final _descController = TextEditingController(text: task.description);
+    DateTime _dueDate = task.dueDate.toDate();
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Padding(
+              padding: EdgeInsets.only(
+                left: 20,
+                right: 20,
+                top: 20,
+                bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('Edit Task', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: _titleController,
+                    decoration: const InputDecoration(labelText: 'Title'),
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: _descController,
+                    decoration: const InputDecoration(labelText: 'Description'),
+                    maxLines: 2,
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text('Due: \\${_dueDate.toLocal().toString().split(' ')[0]}'),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          final picked = await showDatePicker(
+                            context: context,
+                            initialDate: _dueDate,
+                            firstDate: _calendarFirstDay,
+                            lastDate: _calendarLastDay,
+                          );
+                          if (picked != null) {
+                            setModalState(() {
+                              _dueDate = picked;
+                            });
+                          }
+                        },
+                        child: const Text('Pick Due Date'),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (_titleController.text.isEmpty || _descController.text.isEmpty) return;
+                      final updated = Task(
+                        id: task.id,
+                        title: _titleController.text,
+                        description: _descController.text,
+                        completed: task.completed,
+                        createdAt: task.createdAt,
+                        dueDate: Timestamp.fromDate(_dueDate),
+                        userId: task.userId,
+                      );
+                      await TasksService().updateTask(updated);
+                      Navigator.of(context).pop();
+                      _fetchTasks();
+                    },
+                    child: const Text('Save'),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +270,6 @@ class EventManuallyPage extends StatelessWidget {
           padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
-              // Calendar
               TableCalendar(
                 locale: 'en_US',
                 headerStyle: const HeaderStyle(
@@ -45,16 +302,72 @@ class EventManuallyPage extends StatelessWidget {
                   weekendTextStyle: TextStyle(color: Colors.redAccent),
                   outsideTextStyle: TextStyle(color: Colors.grey),
                 ),
-                focusedDay: DateTime.now(),
-                firstDay: DateTime.now().subtract(const Duration(days: 365)),
-                lastDay: DateTime.now().add(const Duration(days: 365)),
+                focusedDay: _focusedDay,
+                firstDay: _calendarFirstDay,
+                lastDay: _calendarLastDay,
+                selectedDayPredicate: (day) => _selectedDay != null && isSameDay(_selectedDay, day),
+                onDaySelected: (selectedDay, focusedDay) {
+                  setState(() {
+                    _selectedDay = selectedDay;
+                    _focusedDay = focusedDay;
+                  });
+                },
+                eventLoader: _getTasksForDay,
+                calendarBuilders: calendarBuilders,
               ),
-
-              // Button to add event
-
-              // List of events
+              const SizedBox(height: 20),
+              if (_selectedDay != null)
+                Expanded(
+                  child: _getTasksForDay(_selectedDay!).isEmpty
+                      ? const Center(child: Text('No tasks for this day', style: TextStyle(color: Colors.white70)))
+                      : ListView.builder(
+                          itemCount: _getTasksForDay(_selectedDay!).length,
+                          itemBuilder: (context, index) {
+                            final task = _getTasksForDay(_selectedDay!)[index];
+                            return Card(
+                              color: Colors.white.withOpacity(0.1),
+                              margin: const EdgeInsets.symmetric(vertical: 6),
+                              child: ListTile(
+                                title: Text(task.title, style: const TextStyle(color: Colors.white)),
+                                subtitle: Text(task.description, style: const TextStyle(color: Colors.white70)),
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(Icons.edit, color: Colors.yellow[700]),
+                                      onPressed: () => _showEditTaskModal(context, task),
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.delete, color: Colors.red),
+                                      onPressed: () async {
+                                        await TasksService().deleteTask(task.id);
+                                        _fetchTasks();
+                                      },
+                                    ),
+                                    Checkbox(
+                                      value: task.completed,
+                                      onChanged: (val) async {
+                                        final updated = task.copyWith(completed: val ?? false);
+                                        await TasksService().updateTask(updated);
+                                        // Force refresh after update
+                                        _fetchTasks();
+                                      },
+                                      activeColor: Colors.green,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                ),
             ],
           ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => _showCreateTaskModal(context),
+          backgroundColor: const Color(0xFFBDF152),
+          child: const Icon(Icons.add, color: Colors.black),
         ),
       ),
     );
