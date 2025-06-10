@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterapi/view/pages/intro/intro_page.dart';
+import 'package:flutterapi/view/pages/welcome_page.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:flutter_tts/flutter_tts.dart';
 
@@ -81,7 +81,7 @@ class _SpeechHomePageState extends State<SpeechHomePage> {
               FirebaseAuth.instance.signOut().then((_) {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const IntroPage()),
+                  MaterialPageRoute(builder: (context) => const WelcomePage()),
                 );
               });
             },

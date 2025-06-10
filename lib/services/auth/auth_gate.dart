@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterapi/view/pages/intro/intro_page.dart';
-import 'package:flutterapi/view/pages/speech_to_text.dart';
+import 'package:flutterapi/view/pages/welcome_page.dart';
+import 'package:flutterapi/view/widgets/navigation_menu.dart';
 
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
@@ -14,11 +14,11 @@ class AuthGate extends StatelessWidget {
         builder: (context, snapshot) {
           // user is logged in
           if (snapshot.hasData) {
-            return const SpeechHomePage();
+            return const NavigationMenu();
           }
           // user is not logged in
           else {
-            return const IntroPage();
+            return const WelcomePage();
           }
         },
       ),

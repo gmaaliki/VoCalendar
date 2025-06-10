@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutterapi/components/lonceng_card.dart';
 import 'package:flutterapi/components/my_elevated_button.dart';
 import 'package:flutterapi/components/square_tile.dart';
 import 'package:flutterapi/helper/top_snackbar.dart';
+import 'package:flutterapi/providers/user_provider.dart';
 import 'package:flutterapi/services/auth/auth_service.dart';
 import 'package:flutterapi/view/pages/auth/forgot_password_page.dart';
 import 'package:flutterapi/view/pages/auth/register_page.dart';
-import 'package:flutterapi/view/pages/speech_to_text.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:flutterapi/view/widgets/navigation_menu.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -32,38 +33,63 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-          Container(
-            width: 1.sw,
-            height: 1.sh,
-            color: Colors.black,
-            child: Column(
-              children: [
-                SizedBox(height: 0.02.sh),
-                LoncengCard(),
-                SizedBox(height: 10.h),
-                Text(
-                  'WELCOME BACK',
-                  style: TextStyle(
-                    fontSize: 26.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    letterSpacing: 2.w,
+          // Header Section
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              height: 0.45.sh,
+              padding: EdgeInsets.symmetric(horizontal: 32.w),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(height: 60.h),
+                  Container(
+                    width: 80.w,
+                    height: 80.h,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFBDF152).withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(20.r),
+                      border: Border.all(
+                        color: const Color(0xFFBDF152).withOpacity(0.3),
+                        width: 1.5,
+                      ),
+                    ),
+                    child: Icon(
+                      Icons.login_rounded,
+                      size: 40.r,
+                      color: const Color(0xFFBDF152),
+                    ),
                   ),
-                ),
-                Text(
-                  'Login to your account!',
-                  style: TextStyle(fontSize: 16.sp, color: Colors.grey),
-                ),
-              ],
+
+                  SizedBox(height: 24.h),
+
+                  Text(
+                    'WELCOME BACK',
+                    style: TextStyle(
+                      fontSize: 24.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      letterSpacing: 2.w,
+                    ),
+                  ),
+                  Text(
+                    'Please login to your account',
+                    style: TextStyle(fontSize: 16.sp, color: Colors.grey),
+                  ),
+                ],
+              ),
             ),
           ),
 
-          // Scrollable login form
+          // Form Section
           DraggableScrollableSheet(
-            initialChildSize: 0.4,
-            minChildSize: 0.4,
+            initialChildSize: 0.55,
+            minChildSize: 0.55,
             maxChildSize: 0.9,
             builder: (context, scrollController) {
               return Container(
@@ -71,9 +97,16 @@ class _LoginPageState extends State<LoginPage> {
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(32.r),
-                    topRight: Radius.circular(32.r),
+                    topLeft: Radius.circular(24.r),
+                    topRight: Radius.circular(24.r),
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 20,
+                      offset: const Offset(0, -5),
+                    ),
+                  ],
                 ),
                 child: SingleChildScrollView(
                   controller: scrollController,
@@ -283,17 +316,23 @@ class _LoginPageState extends State<LoginPage> {
         emailController.text,
         passwordController.text,
       );
+
+      //
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      await userProvider.loadUserDataByEmail(emailController.text);
+      final userName = userProvider.userData['name'] ?? 'User';
+
       showTopSnackbar(
         context: context,
         title: 'Login Success',
-        message:
-            'Welcome to VoCalendar, ${emailController.text.split('@')[0]}!',
+        message: 'Welcome to VoCalendar, $userName!',
         contentType: ContentType.success,
         shadowColor: Colors.green.shade300,
       );
+
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => SpeechHomePage()),
+        MaterialPageRoute(builder: (context) => NavigationMenu()),
       );
     } catch (e) {
       showTopSnackbar(

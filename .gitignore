@@ -46,7 +46,7 @@ app.*.map.json
 
 .env
 
-# Flutter generated plugin registrant files
-macos/Flutter/GeneratedPluginRegistrant.swift
-windows/flutter/generated_plugin_registrant.cc
-windows/flutter/generated_plugins.cmake
+# Ignore all Flutter generated plugin files
+**/GeneratedPluginRegistrant.*
+**/generated_plugin_registrant.*
+**/generated_plugins.cmake

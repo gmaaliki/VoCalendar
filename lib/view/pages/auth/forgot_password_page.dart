@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutterapi/components/lonceng_card.dart';
 import 'package:flutterapi/components/my_elevated_button.dart';
 import 'package:flutterapi/helper/display_message.dart';
 import 'package:flutterapi/helper/top_snackbar.dart';
@@ -29,39 +28,69 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-          Container(
-            width: 1.sw,
-            height: 1.sh,
-            color: Colors.black,
-            child: Column(
-              children: [
-                SizedBox(height: 0.02.sh),
-                LoncengCard(),
-                SizedBox(height: 10.h),
-                Text(
-                  'FORGOT PASSWORD',
-                  style: TextStyle(
-                    fontSize: 26.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    letterSpacing: 2.w,
+          // Header Section
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              height: 0.45.sh,
+              padding: EdgeInsets.symmetric(horizontal: 32.w),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(height: 60.h),
+
+                  // Icon Container
+                  Container(
+                    width: 80.w,
+                    height: 80.h,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFBDF152).withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(20.r),
+                      border: Border.all(
+                        color: const Color(0xFFBDF152).withOpacity(0.3),
+                        width: 1.5,
+                      ),
+                    ),
+                    child: Icon(
+                      Icons.lock_reset_rounded,
+                      size: 40.r,
+                      color: const Color(0xFFBDF152),
+                    ),
                   ),
-                ),
-                Text(
-                  textAlign: TextAlign.center,
-                  'Enter your email to reset your password!',
-                  style: TextStyle(fontSize: 16.sp, color: Colors.grey),
-                ),
-              ],
+
+                  SizedBox(height: 24.h),
+
+                  // Title
+                  Text(
+                    'FORGOT PASSWORD?',
+                    style: TextStyle(
+                      fontSize: 24.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      letterSpacing: 2.w,
+                    ),
+                  ),
+
+                  // Subtitle
+                  Text(
+                    textAlign: TextAlign.center,
+                    'Enter your email address',
+                    style: TextStyle(fontSize: 16.sp, color: Colors.grey),
+                  ),
+                ],
+              ),
             ),
           ),
 
-          // Scrollable login form
+          // Form Section
           DraggableScrollableSheet(
-            initialChildSize: 0.3,
-            minChildSize: 0.3,
+            initialChildSize: 0.5,
+            minChildSize: 0.5,
             maxChildSize: 0.9,
             builder: (context, scrollController) {
               return Container(
@@ -69,15 +98,24 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(32.r),
-                    topRight: Radius.circular(32.r),
+                    topLeft: Radius.circular(24.r),
+                    topRight: Radius.circular(24.r),
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 20,
+                      offset: const Offset(0, -5),
+                    ),
+                  ],
                 ),
                 child: SingleChildScrollView(
                   controller: scrollController,
                   child: Column(
                     children: [
                       SizedBox(height: 20.h),
+
+                      // Drag Handle
                       Container(
                         width: 40.w,
                         height: 4.h,
@@ -86,16 +124,59 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                           borderRadius: BorderRadius.circular(10.r),
                         ),
                       ),
+                      SizedBox(height: 30.h),
+
+                      // Info Card
+                      Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.all(16.w),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFBDF152).withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12.r),
+                          border: Border.all(
+                            color: const Color(0xFFBDF152).withOpacity(0.3),
+                            width: 1,
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.info_outline_rounded,
+                              color: const Color(0xFFBDF152),
+                              size: 20.r,
+                            ),
+                            SizedBox(width: 12.w),
+                            Expanded(
+                              child: Text(
+                                'We\'ll send a password reset link to your email address',
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                  color: Colors.white.withOpacity(0.8),
+                                  height: 1.3,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                       SizedBox(height: 20.h),
 
                       // Email Field
                       TextField(
                         controller: emailController,
+                        keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                           prefixIcon: Icon(Icons.email, size: 24.r),
                           labelText: 'Email',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12.r),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                            borderSide: BorderSide(
+                              color: const Color(0xFFBDF152),
+                              width: 2.w,
+                            ),
                           ),
                         ),
                       ),
@@ -108,7 +189,36 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                         backgroundColor: const Color(0xFFBDF152),
                         onPressed: onResetPressed,
                       ),
-                      SizedBox(height: 10.h),
+                      SizedBox(height: 20.h),
+
+                      // Divider
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Divider(
+                              thickness: 0.5.h,
+                              color: Colors.grey[400],
+                            ),
+                          ),
+                          SizedBox(width: 10.w),
+                          Text(
+                            'Remember your password?',
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 12.sp,
+                            ),
+                          ),
+                          SizedBox(width: 10.w),
+                          Expanded(
+                            child: Divider(
+                              thickness: 0.5.h,
+                              color: Colors.grey[400],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20.h),
 
                       // Back to Login Button
                       TextButton(
@@ -129,6 +239,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                           ),
                         ),
                       ),
+                      SizedBox(height: 20.h),
                     ],
                   ),
                 ),

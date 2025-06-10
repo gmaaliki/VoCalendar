@@ -53,4 +53,34 @@ class AuthService {
       throw Exception(e.message);
     }
   }
+
+  // delete account
+  Future<void> deleteAccount() async {
+    User? user = _firebaseAuth.currentUser;
+    if (user != null) {
+      try {
+        await user.delete();
+      } on FirebaseAuthException catch (e) {
+        throw Exception(e.message);
+      }
+    } else {
+      throw Exception("No user is currently signed in.");
+    }
+  }
+
+  Future<void> reauthenticateUser(String email, String password) async {
+    User? user = _firebaseAuth.currentUser;
+    if (user != null) {
+      AuthCredential credential = EmailAuthProvider.credential(
+        email: email,
+        password: password,
+      );
+
+      try {
+        await user.reauthenticateWithCredential(credential);
+      } on FirebaseAuthException catch (e) {
+        throw Exception('Reauthentication failed: ${e.message}');
+      }
+    }
+  }
 }

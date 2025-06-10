@@ -12,103 +12,84 @@ class WelcomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: 1.sw,
-        height: 1.sh,
-        color: Colors.black,
-        child: Column(
-          children: [
-            SizedBox(height: 0.02.sh),
-            const LoncengCard(),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'WELCOME TO',
-                    style: TextStyle(
-                      fontSize: 30.sp,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      letterSpacing: 5.w,
-                    ),
-                  ),
-                  Text(
-                    'VOCALENDAR',
-                    style: TextStyle(
-                      fontSize: 24.sp,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 2.w,
-                      color: Color(0xFFBDF152),
-                    ),
-                  ),
-                  SizedBox(height: 8.h),
-                  Icon(
-                    Icons.calendar_month_rounded,
-                    size: 80.r,
-                    color: Color(0xFFBDF152),
-                  ),
-                  SizedBox(height: 16.h),
-                  Text(
-                    'Voice-powered calendar assistant',
-                    style: TextStyle(fontSize: 16.sp, color: Colors.grey),
-                  ),
-                  Text(
-                    'Plan your life by just speaking',
-                    style: TextStyle(fontSize: 16.sp, color: Colors.grey),
-                  ),
-                ],
-              ),
-            ),
+      backgroundColor: const Color.fromARGB(255, 0, 0, 0),
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 32.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Top spacing
+              SizedBox(height: 40.h),
 
-            // Buttons section
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 30.0.w),
-              child: Column(
+              // Lottie animation (your existing component)
+              Flexible(flex: 3, child: const LoncengCard()),
+
+              SizedBox(height: 20.h),
+
+              // App name - simplified
+              Text(
+                'VOCALENDAR',
+                style: TextStyle(
+                  fontSize: 32.sp,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFFBDF152),
+                  letterSpacing: 4.w,
+                ),
+              ),
+
+              SizedBox(height: 12.h),
+
+              // Subtitle - more concise
+              Text(
+                'Your AI-powered assistant for effortless scheduling',
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  color: const Color.fromARGB(255, 225, 225, 225),
+                  fontWeight: FontWeight.w400,
+                ),
+                textAlign: TextAlign.center,
+              ),
+
+              const Spacer(),
+
+              // Buttons section
+              Column(
                 children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: MyOutlinedButton(
-                          text: 'REGISTER',
-                          textColor: Color(0xFFBDF152),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const RegisterPage(),
-                              ),
-                            );
-                          },
+                  MyElevatedButton(
+                    text: 'REGISTER',
+                    textColor: Colors.white,
+                    backgroundColor: const Color(0xFF3F24E6),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const RegisterPage(),
                         ),
-                      ),
-                    ],
+                      );
+                    },
                   ),
+
                   SizedBox(height: 10.h),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: MyElevatedButton(
-                          text: 'LOGIN',
-                          textColor: Colors.white,
-                          backgroundColor: const Color(0xFF3F24E6),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const LoginPage(),
-                              ),
-                            );
-                          },
+
+                  MyOutlinedButton(
+                    text: 'LOGIN',
+                    textColor: const Color(0xFFBDF152),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoginPage(),
                         ),
-                      ),
-                    ],
+                      );
+                    },
                   ),
-                  SizedBox(height: 20.h),
                 ],
               ),
-            ),
-          ],
+
+              SizedBox(height: 30.h),
+            ],
+          ),
         ),
       ),
     );

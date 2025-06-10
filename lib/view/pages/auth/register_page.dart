@@ -1,11 +1,11 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutterapi/components/lonceng_card.dart';
 import 'package:flutterapi/components/my_elevated_button.dart';
 import 'package:flutterapi/helper/display_message.dart';
 import 'package:flutterapi/helper/top_snackbar.dart';
 import 'package:flutterapi/services/auth/auth_service.dart';
+import 'package:flutterapi/services/database/firestore.dart';
 import 'package:flutterapi/view/pages/auth/login_page.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -33,45 +33,65 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-          Container(
-            width: 1.sw,
-            height: 1.sh,
-            color: Colors.black,
-            child: Column(
-              children: [
-                SizedBox(height: 0.02.sh),
-                LoncengCard(),
-                SizedBox(height: 10.h),
-                Text(
-                  'CREATE AN ACCOUNT',
-                  style: TextStyle(
-                    fontSize: 24.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    letterSpacing: 2.w,
+          // Header Section
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              height: 0.45.sh,
+              padding: EdgeInsets.symmetric(horizontal: 32.w),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(height: 60.h),
+                  Container(
+                    width: 80.w,
+                    height: 80.h,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFBDF152).withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(20.r),
+                      border: Border.all(
+                        color: const Color(0xFFBDF152).withOpacity(0.3),
+                        width: 1.5,
+                      ),
+                    ),
+                    child: Icon(
+                      Icons.person_add_rounded,
+                      size: 40.r,
+                      color: const Color(0xFFBDF152),
+                    ),
                   ),
-                ),
-                Text(
-                  'Join us to get started',
-                  style: TextStyle(fontSize: 16.sp, color: Colors.grey),
-                ),
-              ],
+
+                  SizedBox(height: 24.h),
+
+                  Text(
+                    'CREATE AN ACCOUNT',
+                    style: TextStyle(
+                      fontSize: 24.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      letterSpacing: 2.w,
+                    ),
+                  ),
+                  Text(
+                    'Join us to get started',
+                    style: TextStyle(fontSize: 16.sp, color: Colors.grey),
+                  ),
+                ],
+              ),
             ),
           ),
 
+          // Form Section
           DraggableScrollableSheet(
-            initialChildSize: 0.4,
-            minChildSize: 0.4,
+            initialChildSize: 0.55,
+            minChildSize: 0.55,
             maxChildSize: 0.9,
             builder: (context, scrollController) {
               return Container(
@@ -103,10 +123,17 @@ class _RegisterPageState extends State<RegisterPage> {
                       TextField(
                         controller: nameController,
                         decoration: InputDecoration(
-                          prefixIcon: const Icon(Icons.person),
-                          labelText: 'Full Name',
+                          prefixIcon: Icon(Icons.person, size: 24.r),
+                          hintText: 'Full Name',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15.r),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15.r),
+                            borderSide: BorderSide(
+                              color: const Color(0xFFBDF152),
+                              width: 2.w,
+                            ),
                           ),
                         ),
                       ),
@@ -117,9 +144,16 @@ class _RegisterPageState extends State<RegisterPage> {
                         controller: emailController,
                         decoration: InputDecoration(
                           prefixIcon: Icon(Icons.email, size: 24.r),
-                          labelText: 'Email',
+                          hintText: 'Email',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12.r),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                            borderSide: BorderSide(
+                              color: const Color(0xFFBDF152),
+                              width: 2.w,
+                            ),
                           ),
                         ),
                       ),
@@ -131,9 +165,16 @@ class _RegisterPageState extends State<RegisterPage> {
                         obscureText: !isPasswordVisible,
                         decoration: InputDecoration(
                           prefixIcon: Icon(Icons.lock, size: 24.r),
-                          labelText: 'Password',
+                          hintText: 'Password',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12.r),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                            borderSide: BorderSide(
+                              color: const Color(0xFFBDF152),
+                              width: 2.w,
+                            ),
                           ),
                           suffixIcon: IconButton(
                             onPressed: () {
@@ -158,9 +199,16 @@ class _RegisterPageState extends State<RegisterPage> {
                         obscureText: !isConfirmPasswordVisible,
                         decoration: InputDecoration(
                           prefixIcon: Icon(Icons.lock, size: 24.r),
-                          labelText: 'Confirm Password',
+                          hintText: 'Confirm Password',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12.r),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                            borderSide: BorderSide(
+                              color: const Color(0xFFBDF152),
+                              width: 2.w,
+                            ),
                           ),
                           suffixIcon: IconButton(
                             onPressed: () {
@@ -229,7 +277,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   void onRegisterPressed() async {
     final authService = AuthService();
-
+    FirestoreService db = FirestoreService();
     // empty all text field
     if (nameController.text.isEmpty ||
         emailController.text.isEmpty ||
@@ -271,11 +319,33 @@ class _RegisterPageState extends State<RegisterPage> {
     // pass and confirm pass match
     if (passwordController.text == confirmPasswordController.text) {
       try {
+        // Sign up with email and password
         await authService.signUpWithEmailPassword(
           nameController.text,
           emailController.text,
           passwordController.text,
         );
+
+        await db.saveUserDataToDatabase(
+          nameController.text,
+          emailController.text,
+          passwordController.text,
+          null, // phone
+          null, // job
+          null, // photoUrl
+        );
+
+        // Get the user ID from the authentication result
+        // final userId = authService.getCurrentUser()?.uid;
+
+        // Save user data to Firestore
+        // await db.saveUserDataToDatabase(
+        //   uid: userId ?? '',
+        //   name: nameController.text,
+        //   email: emailController.text,
+        //   password: passwordController.text,
+        // );
+
         showTopSnackbar(
           context: context,
           title: 'Registration Successful',
