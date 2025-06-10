@@ -22,11 +22,11 @@ class ScheduleViewModel extends ChangeNotifier {
 
     QueryToScheduleResponseDto? responseDto;
     Map<String, dynamic> jsonResponse  = {};
-    String? response = null;
+    String? response;
     try {
       jsonResponse = await _chatApi.postChat(QueryToScheduleRequestDto(user_id: 0, query: query));
       responseDto = QueryToScheduleResponseDto.fromJson(jsonResponse);
-      response = responseDto?.toJson()['response'];
+      response = responseDto.toJson()['response'];
     } catch (e) {
       error = e.toString();
     } finally {

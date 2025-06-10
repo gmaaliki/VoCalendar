@@ -84,9 +84,9 @@ class _EventManuallyPageState extends State<EventManuallyPage> {
   );
 
   void _showCreateTaskModal(BuildContext context) {
-    final _titleController = TextEditingController();
-    final _descController = TextEditingController();
-    DateTime? _dueDate;
+    final titleController = TextEditingController();
+    final descController = TextEditingController();
+    DateTime? dueDate;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -107,12 +107,12 @@ class _EventManuallyPageState extends State<EventManuallyPage> {
               const Text('Create Task', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
               TextField(
-                controller: _titleController,
+                controller: titleController,
                 decoration: const InputDecoration(labelText: 'Title'),
               ),
               const SizedBox(height: 12),
               TextField(
-                controller: _descController,
+                controller: descController,
                 decoration: const InputDecoration(labelText: 'Description'),
                 maxLines: 2,
               ),
@@ -122,9 +122,9 @@ class _EventManuallyPageState extends State<EventManuallyPage> {
                   Expanded(
                     child: StatefulBuilder(
                       builder: (context, setModalState) {
-                        return Text(_dueDate == null
+                        return Text(dueDate == null
                             ? 'No due date selected'
-                            : 'Due: \\${_dueDate!.toLocal().toString().split(' ')[0]}');
+                            : 'Due: \\${dueDate!.toLocal().toString().split(' ')[0]}');
                       },
                     ),
                   ),
@@ -138,7 +138,7 @@ class _EventManuallyPageState extends State<EventManuallyPage> {
                       );
                       if (picked != null) {
                         setState(() {
-                          _dueDate = picked;
+                          dueDate = picked;
                         });
                         Navigator.of(context).pop();
                         _showCreateTaskModal(context);
@@ -151,16 +151,16 @@ class _EventManuallyPageState extends State<EventManuallyPage> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () async {
-                  if (_titleController.text.isEmpty || _descController.text.isEmpty || _dueDate == null) return;
+                  if (titleController.text.isEmpty || descController.text.isEmpty || dueDate == null) return;
                   final user = FirebaseAuth.instance.currentUser;
                   if (user == null) return;
                   final task = Task(
                     id: '',
-                    title: _titleController.text,
-                    description: _descController.text,
+                    title: titleController.text,
+                    description: descController.text,
                     completed: false,
                     createdAt: Timestamp.now(),
-                    dueDate: Timestamp.fromDate(_dueDate!),
+                    dueDate: Timestamp.fromDate(dueDate!),
                     userId: user.uid,
                   );
                   await TasksService().addTask(task);
@@ -176,9 +176,9 @@ class _EventManuallyPageState extends State<EventManuallyPage> {
   }
 
   void _showEditTaskModal(BuildContext context, Task task) {
-    final _titleController = TextEditingController(text: task.title);
-    final _descController = TextEditingController(text: task.description);
-    DateTime _dueDate = task.dueDate.toDate();
+    final titleController = TextEditingController(text: task.title);
+    final descController = TextEditingController(text: task.description);
+    DateTime dueDate = task.dueDate.toDate();
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -201,12 +201,12 @@ class _EventManuallyPageState extends State<EventManuallyPage> {
                   const Text('Edit Task', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 16),
                   TextField(
-                    controller: _titleController,
+                    controller: titleController,
                     decoration: const InputDecoration(labelText: 'Title'),
                   ),
                   const SizedBox(height: 12),
                   TextField(
-                    controller: _descController,
+                    controller: descController,
                     decoration: const InputDecoration(labelText: 'Description'),
                     maxLines: 2,
                   ),
@@ -214,19 +214,19 @@ class _EventManuallyPageState extends State<EventManuallyPage> {
                   Row(
                     children: [
                       Expanded(
-                        child: Text('Due: \\${_dueDate.toLocal().toString().split(' ')[0]}'),
+                        child: Text('Due: \\${dueDate.toLocal().toString().split(' ')[0]}'),
                       ),
                       TextButton(
                         onPressed: () async {
                           final picked = await showDatePicker(
                             context: context,
-                            initialDate: _dueDate,
+                            initialDate: dueDate,
                             firstDate: _calendarFirstDay,
                             lastDate: _calendarLastDay,
                           );
                           if (picked != null) {
                             setModalState(() {
-                              _dueDate = picked;
+                              dueDate = picked;
                             });
                           }
                         },
@@ -237,14 +237,14 @@ class _EventManuallyPageState extends State<EventManuallyPage> {
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () async {
-                      if (_titleController.text.isEmpty || _descController.text.isEmpty) return;
+                      if (titleController.text.isEmpty || descController.text.isEmpty) return;
                       final updated = Task(
                         id: task.id,
-                        title: _titleController.text,
-                        description: _descController.text,
+                        title: titleController.text,
+                        description: descController.text,
                         completed: task.completed,
                         createdAt: task.createdAt,
-                        dueDate: Timestamp.fromDate(_dueDate),
+                        dueDate: Timestamp.fromDate(dueDate),
                         userId: task.userId,
                       );
                       await TasksService().updateTask(updated);

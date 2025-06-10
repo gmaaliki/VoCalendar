@@ -109,11 +109,11 @@ class _SpeechHomePageState extends State<SpeechHomePage> {
                 height: 80,
                 child: FloatingActionButton(
                   onPressed: null,
+                  shape: CircleBorder(),
                   child: Icon(
                     _isListening ? Icons.mic : Icons.mic_off,
                     size: 36,
                   ),
-                  shape: CircleBorder(),
                 ),
               ),
             )
