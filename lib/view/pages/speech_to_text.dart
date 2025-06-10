@@ -2,15 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterapi/view/pages/welcome_page.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:flutter_tts/flutter_tts.dart';
 
-class SpeechToTextApp extends StatelessWidget {
-  const SpeechToTextApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(home: SpeechHomePage());
-  }
-}
+import '../../api/chat_api.dart';
+import '../../viewmodels/schedule_viewmodel.dart';
 
 class SpeechHomePage extends StatefulWidget {
   const SpeechHomePage({super.key});
@@ -21,8 +16,14 @@ class SpeechHomePage extends StatefulWidget {
 
 class _SpeechHomePageState extends State<SpeechHomePage> {
   late stt.SpeechToText _speech;
+  final FlutterTts _flutterTts = FlutterTts();
+
   bool _isListening = false;
   String _text = 'Press the mic button and start speaking...';
+  String _response = 'Response will be shown here';
+
+  // TODO: gunakan provider
+  final vm = ScheduleViewModel(ChatApi());
 
   @override
   void initState() {
@@ -30,24 +31,41 @@ class _SpeechHomePageState extends State<SpeechHomePage> {
     _speech = stt.SpeechToText();
   }
 
-  void _listen() async {
-    if (!_isListening) {
-      bool available = await _speech.initialize();
-      if (available) {
-        setState(() => _isListening = true);
-        _speech.listen(
-          onResult: (result) {
-            setState(() {
-              _text = result.recognizedWords;
-            });
-          },
-          localeId: 'id-ID',
-        );
-      }
-    } else {
-      setState(() => _isListening = false);
-      _speech.stop();
+  void _onHoldMic() async {
+    print("menahan mic");
+    setState(() => _isListening = true);
+    bool available = await _speech.initialize();
+    if (available) {
+      _speech.listen(
+        onResult: (result) {
+          setState(() {
+            _text = result.recognizedWords;
+          });
+        },
+        localeId: 'id-ID',
+      );
     }
+  }
+
+  void _onReleaseMic() async {
+    print("melepas mic");
+    setState(() => _isListening = false);
+    if (_text != '') {
+      String? results = await vm.generateScheduleFromQuery(_text);
+
+      if (results == null || results.isEmpty) {
+        setState(() {
+          _response = 'error';
+        });
+      } else {
+        setState(() {
+          _response = results;
+        });
+        await _flutterTts.setLanguage("id-ID");
+        await _flutterTts.speak(_response);
+      }
+    }
+    _speech.stop();
   }
 
   @override
@@ -74,12 +92,31 @@ class _SpeechHomePageState extends State<SpeechHomePage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Expanded(child: SingleChildScrollView(child: Text(_text))),
-            SizedBox(height: 20),
-            FloatingActionButton(
-              onPressed: _listen,
-              child: Icon(_isListening ? Icons.mic : Icons.mic_off),
+            Expanded(
+                child: ListView(
+                    children: [
+                      Text(_text),
+                      Text(_response),
+                    ]
+                )
             ),
+            GestureDetector(
+              onTapDown: (_) => _onHoldMic(),
+              onTapUp: (_) => _onReleaseMic(),
+              onTapCancel: _onReleaseMic,
+              child: SizedBox(
+                width: 80,
+                height: 80,
+                child: FloatingActionButton(
+                  onPressed: null,
+                  shape: CircleBorder(),
+                  child: Icon(
+                    _isListening ? Icons.mic : Icons.mic_off,
+                    size: 36,
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       ),
