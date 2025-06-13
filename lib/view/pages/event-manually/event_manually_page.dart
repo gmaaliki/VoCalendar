@@ -84,9 +84,9 @@ class _EventManuallyPageState extends State<EventManuallyPage> {
   );
 
   void _showCreateTaskModal(BuildContext context) {
-    final _titleController = TextEditingController();
-    final _descController = TextEditingController();
-    DateTime? _dueDate;
+    final titleController = TextEditingController();
+    final descController = TextEditingController();
+    DateTime? dueDate;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -244,9 +244,9 @@ class _EventManuallyPageState extends State<EventManuallyPage> {
   }
 
   void _showEditTaskModal(BuildContext context, Task task) {
-    final _titleController = TextEditingController(text: task.title);
-    final _descController = TextEditingController(text: task.description);
-    DateTime _dueDate = task.dueDate.toDate();
+    final titleController = TextEditingController(text: task.title);
+    final descController = TextEditingController(text: task.description);
+    DateTime dueDate = task.dueDate.toDate();
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -314,6 +314,7 @@ class _EventManuallyPageState extends State<EventManuallyPage> {
                         borderSide: const BorderSide(color: Colors.grey, width: 1.0),
                       ),
                     ),
+
                     maxLines: 2,
                   ),
                   const SizedBox(height: 16),
@@ -332,7 +333,7 @@ class _EventManuallyPageState extends State<EventManuallyPage> {
                         onPressed: () async {
                           final picked = await showDatePicker(
                             context: context,
-                            initialDate: _dueDate,
+                            initialDate: dueDate,
                             firstDate: _calendarFirstDay,
                             lastDate: _calendarLastDay,
                             builder: (context, child) {
@@ -352,7 +353,7 @@ class _EventManuallyPageState extends State<EventManuallyPage> {
                           );
                           if (picked != null) {
                             setModalState(() {
-                              _dueDate = picked;
+                              dueDate = picked;
                             });
                           }
                         },
