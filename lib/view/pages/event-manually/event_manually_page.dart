@@ -90,86 +90,154 @@ class _EventManuallyPageState extends State<EventManuallyPage> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+      backgroundColor: Colors.transparent,
       builder: (context) {
-        return Padding(
-          padding: EdgeInsets.only(
-            left: 20,
-            right: 20,
-            top: 20,
-            bottom: MediaQuery.of(context).viewInsets.bottom + 20,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text('Create Task', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 16),
-              TextField(
-                controller: titleController,
-                decoration: const InputDecoration(labelText: 'Title'),
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Container(
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.95),
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
               ),
-              const SizedBox(height: 12),
-              TextField(
-                controller: descController,
-                decoration: const InputDecoration(labelText: 'Description'),
-                maxLines: 2,
+              padding: EdgeInsets.only(
+                left: 20,
+                right: 20,
+                top: 20,
+                bottom: MediaQuery.of(context).viewInsets.bottom + 20,
               ),
-              const SizedBox(height: 12),
-              Row(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: StatefulBuilder(
-                      builder: (context, setModalState) {
-                        return Text(dueDate == null
-                            ? 'No due date selected'
-                            : 'Due: \\${dueDate!.toLocal().toString().split(' ')[0]}');
-                      },
+                  Center(
+                    child: Text('Create Task',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFFBDF152),
+                        )),
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: _titleController,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      labelText: 'Title',
+                      labelStyle: const TextStyle(color: Colors.white70),
+                      filled: true,
+                      fillColor: Colors.white.withOpacity(0.05),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(color: Colors.grey, width: 1.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(color: Colors.grey, width: 1.0),
+                      ),
                     ),
                   ),
-                  TextButton(
-                    onPressed: () async {
-                      final picked = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: _calendarFirstDay,
-                        lastDate: _calendarLastDay,
-                      );
-                      if (picked != null) {
-                        setState(() {
-                          dueDate = picked;
-                        });
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: _descController,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      labelText: 'Description',
+                      labelStyle: const TextStyle(color: Colors.white70),
+                      filled: true,
+                      fillColor: Colors.white.withOpacity(0.05),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(color: Colors.grey, width: 1.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(color: Colors.grey, width: 1.0),
+                      ),
+                    ),
+                    maxLines: 2,
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          _dueDate == null
+                              ? 'No due date selected'
+                              : 'Due: \\${_dueDate!.toLocal().toString().split(' ')[0]}',
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          foregroundColor: Color(0xFFBDF152),
+                        ),
+                        onPressed: () async {
+                          final picked = await showDatePicker(
+                            context: context,
+                            initialDate: _dueDate ?? DateTime.now(),
+                            firstDate: _calendarFirstDay,
+                            lastDate: _calendarLastDay,
+                            builder: (context, child) {
+                              return Theme(
+                                data: ThemeData.dark().copyWith(
+                                  colorScheme: ColorScheme.dark(
+                                    primary: Color(0xFFBDF152),
+                                    onPrimary: Colors.black,
+                                    surface: Colors.grey[900]!,
+                                    onSurface: Colors.white,
+                                  ),
+                                  dialogBackgroundColor: Colors.black,
+                                ),
+                                child: child!,
+                              );
+                            },
+                          );
+                          if (picked != null) {
+                            setModalState(() {
+                              _dueDate = picked;
+                            });
+                          }
+                        },
+                        child: const Text('Pick Due Date'),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFFBDF152),
+                        foregroundColor: Colors.black,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                      ),
+                      onPressed: () async {
+                        if (_titleController.text.isEmpty || _descController.text.isEmpty || _dueDate == null) return;
+                        final user = FirebaseAuth.instance.currentUser;
+                        if (user == null) return;
+                        final task = Task(
+                          id: '',
+                          title: _titleController.text,
+                          description: _descController.text,
+                          completed: false,
+                          createdAt: Timestamp.now(),
+                          dueDate: Timestamp.fromDate(_dueDate!),
+                          userId: user.uid,
+                        );
+                        await TasksService().addTask(task);
                         Navigator.of(context).pop();
-                        _showCreateTaskModal(context);
-                      }
-                    },
-                    child: const Text('Pick Due Date'),
+                        _fetchTasks();
+                      },
+                      child: const Text('Create', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () async {
-                  if (titleController.text.isEmpty || descController.text.isEmpty || dueDate == null) return;
-                  final user = FirebaseAuth.instance.currentUser;
-                  if (user == null) return;
-                  final task = Task(
-                    id: '',
-                    title: titleController.text,
-                    description: descController.text,
-                    completed: false,
-                    createdAt: Timestamp.now(),
-                    dueDate: Timestamp.fromDate(dueDate!),
-                    userId: user.uid,
-                  );
-                  await TasksService().addTask(task);
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Create'),
-              ),
-            ],
-          ),
+            );
+          },
         );
       },
     );
@@ -182,13 +250,15 @@ class _EventManuallyPageState extends State<EventManuallyPage> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+      backgroundColor: Colors.transparent,
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setModalState) {
-            return Padding(
+            return Container(
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.95),
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+              ),
               padding: EdgeInsets.only(
                 left: 20,
                 right: 20,
@@ -197,32 +267,89 @@ class _EventManuallyPageState extends State<EventManuallyPage> {
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Edit Task', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  Center(
+                    child: Text('Edit Task',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFFBDF152),
+                        )),
+                  ),
                   const SizedBox(height: 16),
                   TextField(
-                    controller: titleController,
-                    decoration: const InputDecoration(labelText: 'Title'),
+                    controller: _titleController,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      labelText: 'Title',
+                      labelStyle: const TextStyle(color: Colors.white70),
+                      filled: true,
+                      fillColor: Colors.white.withOpacity(0.05),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(color: Colors.grey, width: 1.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(color: Colors.grey, width: 1.0),
+                      ),
+                    ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 16),
                   TextField(
-                    controller: descController,
-                    decoration: const InputDecoration(labelText: 'Description'),
+                    controller: _descController,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      labelText: 'Description',
+                      labelStyle: const TextStyle(color: Colors.white70),
+                      filled: true,
+                      fillColor: Colors.white.withOpacity(0.05),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(color: Colors.grey, width: 1.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(color: Colors.grey, width: 1.0),
+                      ),
+                    ),
+
                     maxLines: 2,
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 16),
                   Row(
                     children: [
                       Expanded(
-                        child: Text('Due: \\${dueDate.toLocal().toString().split(' ')[0]}'),
+                        child: Text(
+                          'Due: \\${_dueDate.toLocal().toString().split(' ')[0]}',
+                          style: const TextStyle(color: Colors.white),
+                        ),
                       ),
                       TextButton(
+                        style: TextButton.styleFrom(
+                          foregroundColor: Color(0xFFBDF152),
+                        ),
                         onPressed: () async {
                           final picked = await showDatePicker(
                             context: context,
                             initialDate: dueDate,
                             firstDate: _calendarFirstDay,
                             lastDate: _calendarLastDay,
+                            builder: (context, child) {
+                              return Theme(
+                                data: ThemeData.dark().copyWith(
+                                  colorScheme: ColorScheme.dark(
+                                    primary: Color(0xFFBDF152),
+                                    onPrimary: Colors.black,
+                                    surface: Colors.grey[900]!,
+                                    onSurface: Colors.white,
+                                  ),
+                                  dialogBackgroundColor: Colors.black,
+                                ),
+                                child: child!,
+                              );
+                            },
                           );
                           if (picked != null) {
                             setModalState(() {
@@ -234,24 +361,35 @@ class _EventManuallyPageState extends State<EventManuallyPage> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () async {
-                      if (titleController.text.isEmpty || descController.text.isEmpty) return;
-                      final updated = Task(
-                        id: task.id,
-                        title: titleController.text,
-                        description: descController.text,
-                        completed: task.completed,
-                        createdAt: task.createdAt,
-                        dueDate: Timestamp.fromDate(dueDate),
-                        userId: task.userId,
-                      );
-                      await TasksService().updateTask(updated);
-                      Navigator.of(context).pop();
-                      _fetchTasks();
-                    },
-                    child: const Text('Save'),
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFFBDF152),
+                        foregroundColor: Colors.black,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                      ),
+                      onPressed: () async {
+                        if (_titleController.text.isEmpty || _descController.text.isEmpty) return;
+                        final updated = Task(
+                          id: task.id,
+                          title: _titleController.text,
+                          description: _descController.text,
+                          completed: task.completed,
+                          createdAt: task.createdAt,
+                          dueDate: Timestamp.fromDate(_dueDate),
+                          userId: task.userId,
+                        );
+                        await TasksService().updateTask(updated);
+                        Navigator.of(context).pop();
+                        _fetchTasks();
+                      },
+                      child: const Text('Save', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
                   ),
                 ],
               ),
