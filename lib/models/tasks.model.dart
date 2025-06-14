@@ -8,6 +8,7 @@ class Task {
   final Timestamp createdAt;
   final Timestamp dueDate;
   final String userId;
+  final List<String> labelIds;
 
   Task({
     required this.id,
@@ -17,6 +18,7 @@ class Task {
     required this.createdAt,
     required this.dueDate,
     required this.userId,
+    this.labelIds = const [],
   });
 
   factory Task.fromDocument(DocumentSnapshot doc) {
@@ -29,6 +31,7 @@ class Task {
       createdAt: data['createdAt'] ?? Timestamp.now(),
       dueDate: data['dueDate'] ?? Timestamp.now(),
       userId: data['userId'] ?? '',
+      labelIds: List<String>.from(data['labelIds'] ?? []),
     );
   }
 
@@ -40,6 +43,7 @@ class Task {
       'createdAt': createdAt,
       'dueDate': dueDate,
       'userId': userId,
+      'labelIds': labelIds,
     };
   }
 
@@ -51,6 +55,7 @@ class Task {
     Timestamp? createdAt,
     Timestamp? dueDate,
     String? userId,
+    List<String>? labelIds,
   }) {
     return Task(
       id: id ?? this.id,
@@ -60,8 +65,7 @@ class Task {
       createdAt: createdAt ?? this.createdAt,
       dueDate: dueDate ?? this.dueDate,
       userId: userId ?? this.userId,
+      labelIds: labelIds ?? this.labelIds,
     );
   }
 }
-
-
