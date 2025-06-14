@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterapi/firebase_options.dart';
@@ -6,6 +7,8 @@ import 'package:flutterapi/services/auth/auth_gate.dart';
 import 'package:flutterapi/services/notifications/notification_service.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutterapi/view/pages/ai-voice/voice_page.dart';
+import 'package:flutterapi/viewmodels/schedule_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 var kDarkColorScheme = ColorScheme.fromSeed(
@@ -18,10 +21,15 @@ void main() async {
   await dotenv.load(fileName: ".env");
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await NotificationService.initializeNotification();
+  final currentUser = FirebaseAuth.instance.currentUser;
+  final _userId = currentUser?.uid;
 
   runApp(
     MultiProvider(
-      providers: [ChangeNotifierProvider(create: (context) => UserProvider())],
+      providers: [
+        ChangeNotifierProvider(create: (context) => UserProvider()),
+        ChangeNotifierProvider(create: (context) => ScheduleViewModel(_userId)),
+      ],
       child: const MainApp(),
     ),
   );
