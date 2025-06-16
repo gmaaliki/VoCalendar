@@ -83,83 +83,82 @@ class _ProfilePageState extends State<ProfilePage> {
           SizedBox(height: 20.h),
 
           Expanded(
-            child: Padding(
-              padding: EdgeInsets.all(20.0.w),
-              child: Container(
+            child: SingleChildScrollView(
+              child: Padding(
                 padding: EdgeInsets.all(20.0.w),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(20.0.r),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // account details
-                    Text(
-                      'Account Details',
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFFBDF152),
+                child: Container(
+                  padding: EdgeInsets.all(20.0.w),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(20.0.r),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // account details
+                      Text(
+                        'Account Details',
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFFBDF152),
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 6.h),
+                      SizedBox(height: 6.h),
 
-                    // name
-                    AccountInfoRow(
-                      icon: Icons.person,
-                      title: 'Name',
-                      value: userData['name'] ?? 'No Name',
-                    ),
-                    AccountInfoRow(
-                      icon: Icons.email,
-                      title: 'Email',
-                      value: userData['email'] ?? 'No Email',
-                    ),
-                    AccountInfoRow(
-                      icon: Icons.phone,
-                      title: 'Phone',
-                      value: userData['phone'] ?? '-',
-                    ),
-                    AccountInfoRow(
-                      icon: Icons.work,
-                      title: 'Job',
-                      value: userData['job'] ?? '-',
-                    ),
-                    SizedBox(height: 20.h),
+                      // name
+                      AccountInfoRow(
+                        icon: Icons.person,
+                        title: 'Name',
+                        value: userData['name'] ?? 'No Name',
+                      ),
+                      AccountInfoRow(
+                        icon: Icons.email,
+                        title: 'Email',
+                        value: userData['email'] ?? 'No Email',
+                      ),
+                      AccountInfoRow(
+                        icon: Icons.phone,
+                        title: 'Phone',
+                        value: userData['phone'] ?? '-',
+                      ),
+                      AccountInfoRow(
+                        icon: Icons.work,
+                        title: 'Job',
+                        value: userData['job'] ?? '-',
+                      ),
+                      SizedBox(height: 20.h),
+                      // Button Edit
+                      MainButton(
+                        text: 'Edit Profile',
+                        textColor: Colors.black,
+                        icon: Icons.edit,
+                        iconColor: Colors.black,
+                        backgroundColor: const Color(0xFFBDF152),
+                        shadowColor: const Color(0xFFBDF152),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EditProfilePage(),
+                            ),
+                          );
+                        },
+                      ),
+                      SizedBox(height: 8.h),
 
-                    const Spacer(),
-
-                    // Button Edit
-                    MainButton(
-                      text: 'Edit Profile',
-                      textColor: Colors.black,
-                      icon: Icons.edit,
-                      iconColor: Colors.black,
-                      backgroundColor: const Color(0xFFBDF152),
-                      shadowColor: const Color(0xFFBDF152),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EditProfilePage(),
-                          ),
-                        );
-                      },
-                    ),
-                    SizedBox(height: 8.h),
-
-                    // Button Logout
-                    MainButton(
-                      text: 'Logout',
-                      textColor: Colors.white,
-                      icon: Icons.logout,
-                      iconColor: Colors.white,
-                      backgroundColor: Colors.redAccent,
-                      shadowColor: Colors.redAccent,
-                      onPressed: onLogoutPressed,
-                    ),
-                  ],
+                      // Button Logout
+                      MainButton(
+                        text: 'Logout',
+                        textColor: Colors.white,
+                        icon: Icons.logout,
+                        iconColor: Colors.white,
+                        backgroundColor: Colors.redAccent,
+                        shadowColor: Colors.redAccent,
+                        onPressed: onLogoutPressed,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
