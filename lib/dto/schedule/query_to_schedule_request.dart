@@ -1,5 +1,5 @@
 class QueryToScheduleRequestDto {
-  final int user_id;
+  final String user_id;
   final String query;
 
   QueryToScheduleRequestDto({required this.user_id, required this.query});

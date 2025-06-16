@@ -11,7 +11,12 @@ class ScheduleService {
   }
 
   Future<void> updateSchedule(Schedule schedule) async {
-    // await _schedulesRef.doc(schedule.id).update(schedule.toMap());
+    if (schedule.id.isEmpty) {
+      throw ArgumentError('Schedule ID is required for update.');
+    }
+
+    final docRef = _schedulesRef.doc(schedule.id);
+    await docRef.update(schedule.toMap());
   }
 
   Future<void> deleteSchedule(String id) async {

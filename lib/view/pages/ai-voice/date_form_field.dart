@@ -51,6 +51,20 @@ class _DateTimePickerFormFieldState extends State<DateTimePickerFormField> {
       initialDate: widget.controller.selectedDateTime ?? now,
       firstDate: DateTime(now.year - 5),
       lastDate: DateTime(now.year + 5),
+      builder: (context, child) {
+        return Theme(
+          data: ThemeData.dark().copyWith(
+            colorScheme: ColorScheme.dark(
+              primary: Color(0xFFBDF152),
+              onPrimary: Colors.black,
+              surface: Colors.grey[900]!,
+              onSurface: Colors.white,
+            ),
+            dialogBackgroundColor: Colors.black,
+          ),
+          child: child!,
+        );
+      },
     );
 
     if (pickedDate == null) return;
@@ -60,6 +74,20 @@ class _DateTimePickerFormFieldState extends State<DateTimePickerFormField> {
       initialTime: widget.controller.selectedDateTime != null
           ? TimeOfDay.fromDateTime(widget.controller.selectedDateTime!)
           : TimeOfDay.now(),
+      builder: (context, child) {
+        return Theme(
+          data: ThemeData.dark().copyWith(
+            colorScheme: ColorScheme.dark(
+              primary: Color(0xFFBDF152),
+              onPrimary: Colors.black,
+              surface: Colors.grey[900]!,
+              onSurface: Colors.white,
+            ),
+            dialogBackgroundColor: Colors.black,
+          ),
+          child: child!,
+        );
+      },
     );
 
     if (pickedTime == null) return;
@@ -81,9 +109,29 @@ class _DateTimePickerFormFieldState extends State<DateTimePickerFormField> {
       controller: _textController,
       readOnly: true,
       decoration: InputDecoration(
-        labelText: widget.label,
+        hintText: "Insert ${widget.label}",
+        hintStyle: TextStyle(
+          color: Colors.white54,
+          fontStyle: FontStyle.italic,
+          fontSize: 18,
+        ),
+        filled: true,
+        fillColor: Colors.white.withOpacity(0.05),
         suffixIcon: const Icon(Icons.calendar_today),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: Colors.grey, width: 1.0),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: Colors.grey, width: 1.0),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(color: Colors.grey, width: 4.0),
+        ),
       ),
+
       onTap: _pickDateTime,
     );
   }

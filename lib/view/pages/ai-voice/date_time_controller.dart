@@ -4,6 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class DateTimeController extends ChangeNotifier {
   DateTime? _selectedDateTime;
 
+  DateTimeController([Timestamp? initialDateTime]) {
+    _selectedDateTime = initialDateTime?.toDate();
+  }
+
   DateTime? get selectedDateTime => _selectedDateTime;
   Timestamp? get firebaseTimestamp =>
       _selectedDateTime != null ? Timestamp.fromDate(_selectedDateTime!) : null;

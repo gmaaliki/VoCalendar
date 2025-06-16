@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterapi/view/pages/ai-voice/date_form_field.dart';
@@ -15,7 +16,7 @@ void showAddScheduleDialog(BuildContext context, String userId) {
   showDialog(
     context: context,
     builder: (_) => AlertDialog(
-      title: const Text("Add Task"),
+      title: const Text("Add Event"),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -41,6 +42,48 @@ void showAddScheduleDialog(BuildContext context, String userId) {
         ElevatedButton(
           child: const Text("Add"),
           onPressed: () {
+            final eventName = eventNameController.text.trim();
+            final startVal = startTimeController.selectedDateTime;
+            final endVal = endTimeController.selectedDateTime;
+
+            if (eventName.isEmpty) {
+              Flushbar(
+                message: "Event name must not be empty",
+                backgroundColor: Colors.red,
+                margin: EdgeInsets.all(16),
+                borderRadius: BorderRadius.circular(12),
+                duration: Duration(seconds: 2),
+                flushbarPosition: FlushbarPosition.BOTTOM,
+              ).show(context);
+              return;
+            }
+
+            if (startVal == null || endVal == null) {
+              Flushbar(
+                message: "Please select both start and end time",
+                backgroundColor: Colors.red,
+                margin: EdgeInsets.all(16),
+                borderRadius: BorderRadius.circular(12),
+                duration: Duration(seconds: 2),
+                flushbarPosition: FlushbarPosition.BOTTOM,
+              ).show(context);
+              return;
+            }
+
+            final start = startTimeController.requireTimestamp("Start Time").toDate();
+            final end = endTimeController.requireTimestamp("End Time").toDate();
+            if (start.isAfter(end) || start.isAtSameMomentAs(end)) {
+              Flushbar(
+                message: "Start time must be before end time",
+                backgroundColor: Colors.red,
+                margin: EdgeInsets.all(16),
+                borderRadius: BorderRadius.circular(12),
+                duration: Duration(seconds: 2),
+                flushbarPosition: FlushbarPosition.BOTTOM,
+              ).show(context);
+              return;
+            }
+
             final newSchedule = Schedule(
               id: '',
               eventName: eventNameController.text,

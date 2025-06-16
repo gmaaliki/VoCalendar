@@ -23,16 +23,14 @@ class ScheduleViewModel extends ChangeNotifier {
   final userId;
 
   ScheduleViewModel(this.userId) {
-    _scheduleStream = _scheduleService.getSchedulesForUser(userId);
+    _scheduleStream = _scheduleService
+        .getSchedulesForUser(userId)
+        .map((schedules) {
+      schedules.sort((a, b) => a.startTime.compareTo(b.startTime));
+      return schedules;
+    });
   }
   
-  // void listenToSchedules(String userId) {
-  //   // if (_hasInitialized) return;
-  //   // _scheduleStream = _scheduleService.getSchedulesForUser(userId);
-  //   // _hasInitialized = true;
-  //   // notifyListeners();
-  // }
-
   Future<void> fetchSchedules(String userId) async {
     _isLoading = true;
     notifyListeners();
@@ -51,7 +49,7 @@ class ScheduleViewModel extends ChangeNotifier {
   String? error;
 
   // TODO: jadikan void return karena viewmodel, return dto hanya untuk testing
-  Future<String?> generateScheduleFromQuery(String query) async {
+  Future<String?> generateScheduleFromQuery(String userId, String query) async {
     _isLoading = true;
     notifyListeners();
 
@@ -59,7 +57,7 @@ class ScheduleViewModel extends ChangeNotifier {
     Map<String, dynamic> jsonResponse  = {};
     String? response;
     try {
-      jsonResponse = await _chatApi.postChat(QueryToScheduleRequestDto(user_id: 0, query: query));
+      jsonResponse = await _chatApi.postChat(QueryToScheduleRequestDto(user_id: userId, query: query));
       responseDto = QueryToScheduleResponseDto.fromJson(jsonResponse);
       response = responseDto.toJson()['response'];
     } catch (e) {

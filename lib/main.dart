@@ -7,7 +7,7 @@ import 'package:flutterapi/services/auth/auth_gate.dart';
 import 'package:flutterapi/services/notifications/notification_service.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutterapi/view/pages/ai-voice/voice_page.dart';
+import 'package:flutterapi/view/pages/ai-voice/schedule_page.dart';
 import 'package:flutterapi/viewmodels/schedule_viewmodel.dart';
 import 'package:provider/provider.dart';
 
