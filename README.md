@@ -61,12 +61,14 @@ Vocalendar is an intelligent voice-based calendar application that allows users 
     <th>Add Schedule</th>
     <th>Update Schedule</th>
     <th>Delete Schedule</th>
+    <th>Delete Schedule</th>
   </tr>
 
   <tr>
     <td><img src="https://github.com/user-attachments/assets/c4c9d93d-e575-4662-8332-5ddd95a03346" alt="My Schedule" width="250"></td>
     <td><img src="https://github.com/user-attachments/assets/c80ba91e-6627-4681-b727-aa26e98c0fba" alt="Add Schedule" width="250"></td>
     <td><img src="https://github.com/user-attachments/assets/836b537a-d594-4d90-af25-74a591a171a6" alt="Update Schedule" width="250"></td>
-    <td><img src="https://github.com/user-attachments/assets/19b6e1e3-8030-4768-ac96-5f2aa9eba2c7" alt="Update Schedule" width="250"></td>
+    <td><img src="https://github.com/user-attachments/assets/19b6e1e3-8030-4768-ac96-5f2aa9eba2c7" alt="Delete Schedule" width="250"></td>
+    <td><img src="https://github.com/user-attachments/assets/31794168-d55a-4c15-b39a-479c3c3acda0" alt="Delete Schedule" width="250"></td>
   </tr>
 </table>
