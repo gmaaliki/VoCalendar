@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutterapi/view/pages/home/home_page.dart';
 import 'package:flutterapi/view/pages/profile/profile_page.dart';
 import 'package:flutterapi/view/pages/event-manually/event_manually_page.dart';
-import 'package:flutterapi/view/pages/ai-voice/voice_page.dart';
+import 'package:flutterapi/view/pages/ai-voice/schedule_page.dart';
 import 'package:crystal_navigation_bar/crystal_navigation_bar.dart';
 import 'package:iconly/iconly.dart';
 
@@ -19,7 +19,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
 
   final List<Widget> _pages = [
     HomePage(),
-    VoicePage(),
+    SchedulePage(),
     EventManuallyPage(),
     ProfilePage(),
   ];
