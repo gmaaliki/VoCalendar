@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutterapi/firebase_options.dart';
 import 'package:flutterapi/providers/user_provider.dart';
 import 'package:flutterapi/services/auth/auth_gate.dart';
@@ -18,6 +19,9 @@ var kDarkColorScheme = ColorScheme.fromSeed(
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(
+    widgetsBinding: WidgetsFlutterBinding.ensureInitialized(),
+  );
   await dotenv.load(fileName: ".env");
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await NotificationService.initializeNotification();
@@ -33,6 +37,7 @@ void main() async {
       child: const MainApp(),
     ),
   );
+  FlutterNativeSplash.remove();
 }
 
 class MainApp extends StatelessWidget {
