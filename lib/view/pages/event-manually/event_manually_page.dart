@@ -84,9 +84,9 @@ class _EventManuallyPageState extends State<EventManuallyPage> {
   );
 
   void _showCreateTaskModal(BuildContext context) {
-    final titleController = TextEditingController();
-    final descController = TextEditingController();
-    DateTime? dueDate;
+    final _titleController = TextEditingController();
+    final _descController = TextEditingController();
+    DateTime? _dueDate;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -244,9 +244,9 @@ class _EventManuallyPageState extends State<EventManuallyPage> {
   }
 
   void _showEditTaskModal(BuildContext context, Task task) {
-    final titleController = TextEditingController(text: task.title);
-    final descController = TextEditingController(text: task.description);
-    DateTime dueDate = task.dueDate.toDate();
+    final _titleController = TextEditingController(text: task.title);
+    final _descController = TextEditingController(text: task.description);
+    DateTime _dueDate = task.dueDate.toDate();
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -333,7 +333,7 @@ class _EventManuallyPageState extends State<EventManuallyPage> {
                         onPressed: () async {
                           final picked = await showDatePicker(
                             context: context,
-                            initialDate: dueDate,
+                            initialDate: _dueDate,
                             firstDate: _calendarFirstDay,
                             lastDate: _calendarLastDay,
                             builder: (context, child) {
@@ -353,7 +353,7 @@ class _EventManuallyPageState extends State<EventManuallyPage> {
                           );
                           if (picked != null) {
                             setModalState(() {
-                              dueDate = picked;
+                              _dueDate = picked;
                             });
                           }
                         },

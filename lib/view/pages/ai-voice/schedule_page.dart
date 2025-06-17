@@ -99,7 +99,11 @@ class _SchedulePageState extends State<SchedulePage> {
         child: Column(
           children: [
             AiVoice(messageNotifier: _responseNotifier, loadingNotifier: _isListeningNotifier),
-            Expanded(
+            SizedBox(
+              height: MediaQuery
+                  .of(context)
+                  .size
+                  .height * 0.5,
               child: Consumer<ScheduleViewModel>(
                 builder: (context, vm, build) {
                   return StreamBuilder<List<Schedule>>(
@@ -135,8 +139,8 @@ class _SchedulePageState extends State<SchedulePage> {
         onTapUp: (_) => _onReleaseMic(),
         onTapCancel: _onReleaseMic,
         child: SizedBox(
-          width: 80,
-          height: 80,
+          width: 50,
+          height: 50,
           child: FloatingActionButton(
             onPressed: null,
             shape: CircleBorder(),
