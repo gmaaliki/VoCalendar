@@ -11,6 +11,8 @@ void showTopSnackbar({
   required ContentType contentType,
   required Color shadowColor,
 }) {
+  final messenger = ScaffoldMessenger.of(context); // Ambil dulu referensinya
+
   final materialBanner = MaterialBanner(
     elevation: 5,
     backgroundColor: Colors.transparent,
@@ -19,7 +21,7 @@ void showTopSnackbar({
     minActionBarHeight: 8.h,
     onVisible:
         () => Future.delayed(const Duration(seconds: 2), () {
-          ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+          messenger.hideCurrentMaterialBanner();
         }),
     content: AwesomeSnackbarContent(
       title: title,
